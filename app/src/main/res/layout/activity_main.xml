@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_margin="0dp"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_main"
+    tools:context=".MainActivity">
+
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_62sdp"
+        android:text="Get Started"
+        android:textStyle="bold"
+        android:textColor="@color/colorSecondaryText"
+        android:textSize="@dimen/_42ssp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:textColor="@color/colorSecondaryText"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_131sdp"
+        android:layout_marginLeft="@dimen/_131sdp"
+        android:layout_marginTop="@dimen/_23sdp"
+        android:layout_marginEnd="@dimen/_131sdp"
+        android:layout_marginRight="@dimen/_131sdp"
+        android:text="Objectives Here"
+        android:textSize="@dimen/_14sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <TextView
+        android:id="@+id/consumerSignUp"
+        android:layout_width="@dimen/_240sdp"
+        android:layout_height="@dimen/_42sdp"
+        android:layout_marginTop="@dimen/_83sdp"
+        android:background="@drawable/bg_emailpass"
+        android:elevation="@dimen/_6sdp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:text="I am a Consumer"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textColor="@color/facebook_blue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <TextView
+        android:id="@+id/vendorSignup"
+        android:layout_width="@dimen/_240sdp"
+        android:layout_height="@dimen/_42sdp"
+        android:layout_marginTop="@dimen/_32sdp"
+        android:background="@drawable/bg_emailpass"
+        android:elevation="6dp"
+        android:textColor="@color/google_red"
+        android:gravity="center"
+        android:text="I am a Producer"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/consumerSignUp" />
+
+
+</android.support.constraint.ConstraintLayout>
