@@ -42,6 +42,16 @@ public class Producers {
     @Expose
     private String addedAt;
 
+    private boolean isChecked;
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
+
     public String getId() {
         return id;
     }

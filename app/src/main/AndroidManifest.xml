@@ -23,12 +23,17 @@
             android:parentActivityName=".ConsumerLandingActivity" />
         <activity android:name=".ConsumerSignUpActivity" />
         <activity android:name=".ConsumerLoginActivity" />
-        <activity android:name=".ProducerActivity" />
-        <activity android:name=".VendorLandingActivity" />
-        <activity android:name=".VendorSignupActivity" />
+        <activity android:name=".ProducerMasonActivity" />
+        <activity android:name=".ProducerLandingActivity" />
+        <activity android:name=".ProducerSignupActivity" />
         <activity
-            android:name=".HomeActivity"
-            android:label="@string/title_activity_home"></activity>
+            android:name=".ConsumerHomeActivity"
+            android:label="@string/title_activity_home" />
+        <activity
+            android:name=".ProducerHomeActivity"
+            android:label="@string/title_activity_producer_home" />
+        <activity android:name=".ProducerLabourActivity" />
+        <activity android:name=".OrderPlaceActivity"></activity>
     </application>
 
 </manifest>

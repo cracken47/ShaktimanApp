@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".ProducerSignupActivity">
+
+
+            <EditText
+                android:id="@+id/fullName"
+                android:layout_width="@dimen/editbox_width_email_password"
+                android:layout_height="@dimen/editbox_height_email_password"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_emailpass"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="Full Name"
+                android:inputType="textPersonName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="@dimen/editbox_width_email_password"
+                android:layout_height="@dimen/editbox_height_email_password"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_emailpass"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="Password"
+                android:inputType="textPassword"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fullName" />
+
+            <EditText
+                android:id="@+id/mobileNumber"
+                android:layout_width="@dimen/editbox_width_email_password"
+                android:layout_height="@dimen/editbox_height_email_password"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_emailpass"
+                android:ems="10"
+                android:gravity="center"
+                android:maxLength="10"
+                android:hint="Mobile Number"
+                android:inputType="phone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/password" />
+
+            <TextView
+                android:id="@+id/dateOfBirth"
+                android:layout_width="@dimen/editbox_width_email_password"
+                android:layout_height="@dimen/editbox_height_email_password"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_emailpass"
+                android:drawableRight="@drawable/ic_insert_invitation_black_24dp"
+                android:drawablePadding="-28dp"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="Date Of Birth"
+                android:inputType="date"
+                android:padding="12dp"
+                android:textAlignment="center"
+                android:textSize="@dimen/_16ssp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mobileNumber" />
+
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="@dimen/_160sdp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/aadhar">
+
+                <RadioButton
+                    android:id="@+id/radioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Mason" />
+
+                <RadioButton
+                    android:id="@+id/radioButton3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Labour" />
+            </RadioGroup>
+
+            <Button
+                android:id="@+id/signUpButton"
+                android:layout_width="@dimen/_110sdp"
+                android:layout_height="@dimen/editbox_height_email_password"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="32dp"
+                android:background="@drawable/red_button"
+                android:text="SignUp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/localitySpinner" />
+
+            <EditText
+                android:id="@+id/aadhar"
+                android:layout_width="@dimen/editbox_width_email_password"
+                android:layout_height="@dimen/editbox_height_email_password"
+                android:layout_marginStart="40dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="40dp"
+                android:layout_marginRight="40dp"
+                android:background="@drawable/bg_emailpass"
+                android:ems="10"
+                android:maxLength="16"
+                android:gravity="center"
+                android:hint="Aadhar Number"
+                android:inputType="textPersonName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dateOfBirth" />
+
+            <org.angmarch.views.NiceSpinner
+                android:id="@+id/stateSpinner"
+                android:layout_width="@dimen/editbox_width_email_password"
+                android:layout_height="@dimen/editbox_height_email_password"
+                android:background="@drawable/bg_emailpass"
+                android:layout_marginTop="16dp"
+                android:hint="Choose State"
+                android:gravity="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+
+            <org.angmarch.views.NiceSpinner
+                android:id="@+id/citySpinner"
+                android:layout_width="@dimen/editbox_width_email_password"
+                android:layout_height="@dimen/editbox_height_email_password"
+                android:background="@drawable/bg_emailpass"
+                android:hint="Choose City"
+                android:gravity="center"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/stateSpinner" />
+
+            <org.angmarch.views.NiceSpinner
+                android:id="@+id/localitySpinner"
+                android:layout_width="@dimen/editbox_width_email_password"
+                android:layout_height="@dimen/editbox_height_email_password"
+                android:background="@drawable/bg_emailpass"
+                android:layout_marginTop="16dp"
+                android:hint="Choose Locality"
+                android:gravity="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/citySpinner" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+</LinearLayout>

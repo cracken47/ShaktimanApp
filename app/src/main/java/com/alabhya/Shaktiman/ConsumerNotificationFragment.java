@@ -6,17 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.angmarch.views.NiceSpinner;
+public class ConsumerNotificationFragment extends Fragment {
 
-
-public class ProducerHomeFragment extends Fragment {
-
-
-    private NiceSpinner chooseLabour,chooseMason;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_producer_home, container, false);
-        return view;
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_consumer_notification, container, false);
     }
 }

@@ -1,7 +1,9 @@
 package com.alabhya.Shaktiman;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,12 +30,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        registerReceiver(broadcastReceiver, new IntentFilter("finish_activity"));
+
         vendorSignup = findViewById(R.id.vendorSignup);
 
         vendorSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), VendorLandingActivity.class);
+                Intent i = new Intent(getApplicationContext(), ProducerLandingActivity.class);
                 startActivity(i);
             }
         });
@@ -45,10 +49,28 @@ public class MainActivity extends AppCompatActivity {
 
         if(phone!=DEFAULT && password!=DEFAULT && isProducer){
             Log.d("Single",phone+password);
-            startActivity(new Intent(getApplicationContext(),HomeActivity.class));
+            startActivity(new Intent(getApplicationContext(),ProducerHomeActivity.class));
+            finish();
+        }else if(phone!=DEFAULT && password!=DEFAULT && !isProducer){
+            Log.d("Single",phone+password);
+            startActivity(new Intent(getApplicationContext(),ConsumerHomeActivity.class));
             finish();
         }
     }
 
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action=="finish_activity"){
+                finish();
+            }
+        }
+    };
 
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(broadcastReceiver);
+        super.onDestroy();
+    }
 }

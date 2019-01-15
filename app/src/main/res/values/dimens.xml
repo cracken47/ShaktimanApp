@@ -2,6 +2,8 @@
 <resources>
     <dimen name="editbox_height_email_password">@dimen/_42sdp</dimen>
     <dimen name="editbox_width_email_password">@dimen/_240sdp</dimen>
+    <dimen name="button_width">@dimen/_110sdp</dimen>
+    <dimen name="button_height">@dimen/_42sdp</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
