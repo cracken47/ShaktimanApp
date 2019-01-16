@@ -1,7 +1,9 @@
-package com.alabhya.Shaktiman;
+package com.alabhya.Shaktiman.ProducersList;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,10 +15,12 @@ import android.view.View;
 import android.widget.Button;
 
 import com.alabhya.Shaktiman.Adapters.ProducerLabourAdapter;
+import com.alabhya.Shaktiman.R;
 import com.alabhya.Shaktiman.apiBackend.ApiClient;
 import com.alabhya.Shaktiman.apiBackend.UserManagementService;
 import com.alabhya.Shaktiman.models.Producers;
 
+import java.util.Calendar;
 import java.util.List;
 
 import retrofit2.Call;
@@ -62,6 +66,8 @@ public class ProducerLabourActivity extends AppCompatActivity {
 
         toolbar.setTitle("Labours List");
 
+        registerReceiver(broadcastReceiver, new IntentFilter("finish_labour_list_activity"));
+
         recyclerView = findViewById(R.id.producerView);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -97,4 +103,38 @@ public class ProducerLabourActivity extends AppCompatActivity {
             startActivity(intent);
         }
     };
+
+    private String getAge(int year, int month, int day){
+        Calendar dob = Calendar.getInstance();
+        Calendar today = Calendar.getInstance();
+
+        dob.set(year, month, day);
+
+        int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+
+        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)){
+            age--;
+        }
+
+        Integer ageInt = new Integer(age);
+        String ageS = ageInt.toString();
+
+        return ageS;
+    }
+
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action=="finish_labour_list_activity"){
+                finish();
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(broadcastReceiver);
+        super.onDestroy();
+    }
 }

@@ -22,25 +22,25 @@
             android:layout_height="match_parent">
 
             <org.angmarch.views.NiceSpinner
-                android:id="@+id/niceSpinner5"
+                android:id="@+id/place_order_spinnerLocality"
                 android:layout_width="@dimen/editbox_width_email_password"
                 android:layout_height="@dimen/editbox_height_email_password"
                 android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/niceSpinner3" />
+                app:layout_constraintTop_toBottomOf="@+id/place_order_spinnerCity" />
 
             <org.angmarch.views.NiceSpinner
-                android:id="@+id/niceSpinner3"
+                android:id="@+id/place_order_spinnerCity"
                 android:layout_width="@dimen/editbox_width_email_password"
                 android:layout_height="@dimen/editbox_height_email_password"
                 android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/niceSpinner4" />
+                app:layout_constraintTop_toBottomOf="@+id/place_order_spinnerState" />
 
             <org.angmarch.views.NiceSpinner
-                android:id="@+id/niceSpinner4"
+                android:id="@+id/place_order_spinnerState"
                 android:layout_width="@dimen/editbox_width_email_password"
                 android:layout_height="@dimen/editbox_height_email_password"
                 android:layout_marginTop="16dp"
@@ -49,7 +49,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
-                android:id="@+id/editText"
+                android:id="@+id/place_order_flat"
                 android:layout_width="@dimen/editbox_width_email_password"
                 android:layout_height="@dimen/editbox_height_email_password"
                 android:layout_marginTop="16dp"
@@ -60,10 +60,10 @@
                 android:hint="Flat"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/niceSpinner5" />
+                app:layout_constraintTop_toBottomOf="@+id/place_order_spinnerLocality" />
 
             <EditText
-                android:id="@+id/editText2"
+                android:id="@+id/place_order_street"
                 android:layout_width="@dimen/editbox_width_email_password"
                 android:layout_height="@dimen/editbox_height_email_password"
                 android:layout_marginTop="16dp"
@@ -74,10 +74,10 @@
                 android:hint="Street Name"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText" />
+                app:layout_constraintTop_toBottomOf="@+id/place_order_flat" />
 
             <EditText
-                android:id="@+id/editText3"
+                android:id="@+id/place_order_area"
                 android:layout_width="@dimen/editbox_width_email_password"
                 android:layout_height="@dimen/editbox_height_email_password"
                 android:layout_marginTop="16dp"
@@ -88,10 +88,10 @@
                 android:gravity="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText2" />
+                app:layout_constraintTop_toBottomOf="@+id/place_order_street" />
 
             <EditText
-                android:id="@+id/editText4"
+                android:id="@+id/place_order_landmark"
                 android:layout_width="@dimen/editbox_width_email_password"
                 android:layout_height="@dimen/editbox_height_email_password"
                 android:layout_marginTop="16dp"
@@ -102,10 +102,10 @@
                 android:gravity="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText3" />
+                app:layout_constraintTop_toBottomOf="@+id/place_order_area" />
 
             <EditText
-                android:id="@+id/editText6"
+                android:id="@+id/place_order_contact"
                 android:layout_width="@dimen/editbox_width_email_password"
                 android:layout_height="@dimen/editbox_height_email_password"
                 android:layout_marginTop="16dp"
@@ -116,10 +116,10 @@
                 android:hint="Contact Number"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText4" />
+                app:layout_constraintTop_toBottomOf="@+id/place_order_landmark" />
 
             <EditText
-                android:id="@+id/editText7"
+                android:id="@+id/place_order_workDesc"
                 android:layout_width="@dimen/editbox_width_email_password"
                 android:layout_height="@dimen/_80sdp"
                 android:layout_marginTop="16dp"
@@ -128,13 +128,13 @@
                 android:gravity="top"
                 android:padding="@dimen/_8sdp"
                 android:inputType="textPersonName"
-                android:hint="Word Description"
+                android:hint="Work Description"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText6" />
+                app:layout_constraintTop_toBottomOf="@+id/place_order_contact" />
 
-            <EditText
-                android:id="@+id/editText8"
+            <TextView
+                android:id="@+id/place_order_workDate"
                 android:layout_width="@dimen/editbox_width_email_password"
                 android:layout_height="@dimen/editbox_height_email_password"
                 android:layout_marginTop="16dp"
@@ -147,7 +147,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/placeOrderButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText7" />
+                app:layout_constraintTop_toBottomOf="@+id/place_order_workDesc" />
 
             <Button
                 android:id="@+id/placeOrderButton"
@@ -156,6 +156,7 @@
                 android:layout_marginBottom="32dp"
                 android:background="@drawable/button_one"
                 android:text="Place Order"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />

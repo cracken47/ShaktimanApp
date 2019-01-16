@@ -11,6 +11,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.alabhya.Shaktiman.ConsumerMainView.ConsumerHomeActivity;
+import com.alabhya.Shaktiman.ConsumerUserManagement.ConsumerLandingActivity;
+import com.alabhya.Shaktiman.ProducerMainView.ProducerHomeActivity;
+import com.alabhya.Shaktiman.ProducerUserManagement.ProducerLandingActivity;
+
 public class MainActivity extends AppCompatActivity {
 
     TextView vendorSignup;
@@ -30,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        registerReceiver(broadcastReceiver, new IntentFilter("finish_activity"));
+        registerReceiver(broadcastReceiver, new IntentFilter("finish_main_activity"));
 
         vendorSignup = findViewById(R.id.vendorSignup);
 
@@ -62,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action=="finish_activity"){
+            if (action=="finish_main_activity"){
                 finish();
             }
         }

@@ -1,6 +1,5 @@
 package com.alabhya.Shaktiman.models.OrderDetailsConsumer;
 
-import com.alabhya.Shaktiman.models.OrderDetailsConsumer.OrderDataConsumer;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

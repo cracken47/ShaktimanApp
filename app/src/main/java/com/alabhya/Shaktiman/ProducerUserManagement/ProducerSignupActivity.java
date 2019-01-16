@@ -1,4 +1,4 @@
-package com.alabhya.Shaktiman;
+package com.alabhya.Shaktiman.ProducerUserManagement;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -17,6 +17,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alabhya.Shaktiman.ProducerMainView.ProducerHomeActivity;
+import com.alabhya.Shaktiman.R;
 import com.alabhya.Shaktiman.apiBackend.ApiClient;
 import com.alabhya.Shaktiman.apiBackend.UserManagementService;
 import com.alabhya.Shaktiman.models.Location;
@@ -52,7 +54,7 @@ public class ProducerSignupActivity extends AppCompatActivity {
     private EditText mobileNumber;
     private EditText aadhar;
     private TextView dob;
-    NiceSpinner spinnerCity, spinnerState, spinnerLocality;
+    private NiceSpinner spinnerCity, spinnerState, spinnerLocality;
 
 
     @Override
@@ -180,7 +182,8 @@ public class ProducerSignupActivity extends AppCompatActivity {
         producerSignUp.enqueue(new Callback<TokenResponseProducerSignUp>() {
             @Override
             public void onResponse(Call<TokenResponseProducerSignUp> call, Response<TokenResponseProducerSignUp> response) {
-                if (response.code() == 200) {
+                TokenResponseProducerSignUp tokenResponseProducerSignUp = response.body();
+                if (tokenResponseProducerSignUp.getStatus() == 200) {
                     SharedPreferences sharedPreferences = getSharedPreferences("LoginCredentials",Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
 
@@ -190,17 +193,19 @@ public class ProducerSignupActivity extends AppCompatActivity {
                     editor.apply();
                     Log.d("Single","Login Data"+phone+password);
                     startActivity(new Intent(getApplicationContext(), ProducerHomeActivity.class));
-                    Intent intent = new Intent("finish_activity");
+                    Intent intent = new Intent("finish_main_activity");
                     sendBroadcast(intent);
                     finish();
                     TokenResponseProducerSignUp response1 = response.body();
                     Log.d("Single", "" + response1.getName() + response1.getStatus());
+                }else {
+                    Toast.makeText(getApplicationContext(),tokenResponseProducerSignUp.getMessage(),Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<TokenResponseProducerSignUp> call, Throwable t) {
-                Log.d("Single", "Some Error");
+                Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -322,7 +327,7 @@ public class ProducerSignupActivity extends AppCompatActivity {
                     year, month, day
             );
 
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.show();
         }
     };

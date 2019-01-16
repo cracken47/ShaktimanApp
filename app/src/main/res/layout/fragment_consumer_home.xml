@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:background="#546e7a"
     android:layout_height="match_parent"
-    tools:context="com.alabhya.Shaktiman.ConsumerHomeFragment">
+    tools:context="com.alabhya.Shaktiman.ConsumerMainView.ConsumerHomeFragment">
 
 
     <android.support.constraint.ConstraintLayout

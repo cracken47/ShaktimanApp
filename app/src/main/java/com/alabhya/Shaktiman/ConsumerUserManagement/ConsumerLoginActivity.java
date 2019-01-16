@@ -1,4 +1,4 @@
-package com.alabhya.Shaktiman;
+package com.alabhya.Shaktiman.ConsumerUserManagement;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.alabhya.Shaktiman.ConsumerMainView.ConsumerHomeActivity;
+import com.alabhya.Shaktiman.R;
 import com.alabhya.Shaktiman.apiBackend.ApiClient;
 import com.alabhya.Shaktiman.apiBackend.UserManagementService;
 import com.alabhya.Shaktiman.models.ConsumerSignIn.TokenResponseConsumerSignIn;
@@ -83,8 +85,10 @@ public class ConsumerLoginActivity extends AppCompatActivity {
                     Log.d("Single","Login Data"+phone+password);
 
                     startActivity(new Intent(getApplicationContext(),ConsumerHomeActivity.class));
-                    Intent intent = new Intent("finish_activity");
+                    Intent intent = new Intent("finish_consumer_landing_activity");
                     sendBroadcast(intent);
+                    Intent i = new Intent("finish_main_activity");
+                    sendBroadcast(i);
                     finish();
                 }else{
                             Toast.makeText(getApplicationContext(),tokenResponseConsumerSignIn.getMessage()

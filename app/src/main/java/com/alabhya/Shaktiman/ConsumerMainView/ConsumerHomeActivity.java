@@ -1,6 +1,9 @@
-package com.alabhya.Shaktiman;
+package com.alabhya.Shaktiman.ConsumerMainView;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,10 +12,10 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.alabhya.Shaktiman.R;
 import com.alabhya.Shaktiman.apiBackend.ApiClient;
 import com.alabhya.Shaktiman.apiBackend.UserManagementService;
 import com.alabhya.Shaktiman.models.ConsumerSignIn.TokenResponseConsumerSignIn;
-import com.facebook.shimmer.ShimmerFrameLayout;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,6 +35,8 @@ public class ConsumerHomeActivity extends AppCompatActivity {
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new ConsumerHomeFragment()).commit();
+
+        registerReceiver(broadcastReceiver, new IntentFilter("finish_consumer_home_activity"));
 
         SharedPreferences sharedPreferences = getSharedPreferences("Logincredential",Context.MODE_PRIVATE);
         UserManagementService userManagementService = ApiClient.getRetrofitClient().create(UserManagementService.class);
@@ -67,10 +72,10 @@ public class ConsumerHomeActivity extends AppCompatActivity {
                 case R.id.navigation_home:
                     selectedFragment = new ConsumerHomeFragment();
                     break;
-                case R.id.orders:
+                case R.id.profile:
                     selectedFragment = new ConsumerDashBoardFragment();
                     break;
-                case R.id.profile:
+                case R.id.help:
                     selectedFragment = new ConsumerNotificationFragment();
                     break;
             }
@@ -78,6 +83,22 @@ public class ConsumerHomeActivity extends AppCompatActivity {
             return true;
         }
     };
+
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action=="finish_consumer_home_activity"){
+                finish();
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(broadcastReceiver);
+        super.onDestroy();
+    }
 
 
 }

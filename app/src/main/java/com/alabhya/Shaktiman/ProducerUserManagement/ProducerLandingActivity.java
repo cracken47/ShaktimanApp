@@ -1,4 +1,4 @@
-package com.alabhya.Shaktiman;
+package com.alabhya.Shaktiman.ProducerUserManagement;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alabhya.Shaktiman.ProducerMainView.ProducerHomeActivity;
+import com.alabhya.Shaktiman.R;
 import com.alabhya.Shaktiman.apiBackend.ApiClient;
 import com.alabhya.Shaktiman.apiBackend.UserManagementService;
 import com.alabhya.Shaktiman.models.ProducerSignIn.TokenResponseProducerLogin;
@@ -84,7 +86,7 @@ public class ProducerLandingActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<TokenResponseProducerLogin> call, Throwable t) {
-                Log.d("Single","Error Occured");
+                Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
             }
         });
     }

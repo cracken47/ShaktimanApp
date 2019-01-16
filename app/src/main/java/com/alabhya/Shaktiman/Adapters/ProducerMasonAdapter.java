@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.alabhya.Shaktiman.R;
 import com.alabhya.Shaktiman.models.Producers;
+import com.alabhya.Shaktiman.utils.AgeCalculator;
 import com.google.common.base.Joiner;
 
 import java.util.HashMap;
@@ -43,10 +44,10 @@ public class ProducerMasonAdapter extends RecyclerView.Adapter<ProducerMasonAdap
     public void onBindViewHolder(@NonNull ProducerMasonAdapter.MyViewHolder holder, int position) {
         Producers prodModel = producers.get(position);
         holder.Name.setText(producers.get(position).getName());
-        SharedPreferences credentialPreference = context.getSharedPreferences("LoginCredentials",0);
-        credentialPreference.getString("age","");
-        holder.Name.setText(producers.get(position).getName());
-        holder.Age.setText(age);
+        String age = new AgeCalculator().getAge(producers.get(position).getDob());
+        if(Integer.parseInt(age)>=1) {
+            holder.Age.setText("Age: "+age);
+        }else holder.Age.setText("");
         if(prodModel.isChecked()){
             holder.checkBox.setChecked(true);
         }else {

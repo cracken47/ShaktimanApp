@@ -1,4 +1,4 @@
-package com.alabhya.Shaktiman;
+package com.alabhya.Shaktiman.ConsumerMainView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+
+import com.alabhya.Shaktiman.ProducersList.ProducerLabourActivity;
+import com.alabhya.Shaktiman.R;
 
 import org.angmarch.views.NiceSpinner;
 

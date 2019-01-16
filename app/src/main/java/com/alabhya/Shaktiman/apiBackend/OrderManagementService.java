@@ -34,7 +34,7 @@ public interface OrderManagementService {
     @Headers({"Authorization:674532","User-Agent:shaktiM@nApp","Content-Type:application/x-www-form-urlencoded"})
     @POST("placeOrder.php")
     Call<PlaceOrder> placeOrder
-            (@Field("userId") String userId,
+            (@Field("userId") String  userId,
              @Field("stateId") String stateId,
              @Field("cityId") String cityId,
              @Field("localityId") String localityId,

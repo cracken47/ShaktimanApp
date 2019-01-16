@@ -1,10 +1,12 @@
-package com.alabhya.Shaktiman;
+package com.alabhya.Shaktiman.ProducerMainView;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.alabhya.Shaktiman.R;
 
 import org.angmarch.views.NiceSpinner;
 

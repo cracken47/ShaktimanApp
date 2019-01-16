@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_weight="10"
         android:layout_height="match_parent"
-        tools:context=".ProducerMasonActivity">
+        tools:context=".ProducersList.ProducerMasonActivity">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/producerView"

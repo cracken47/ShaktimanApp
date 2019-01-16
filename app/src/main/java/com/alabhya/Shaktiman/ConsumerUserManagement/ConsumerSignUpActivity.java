@@ -1,4 +1,4 @@
-package com.alabhya.Shaktiman;
+package com.alabhya.Shaktiman.ConsumerUserManagement;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.alabhya.Shaktiman.ConsumerMainView.ConsumerHomeActivity;
+import com.alabhya.Shaktiman.R;
 import com.alabhya.Shaktiman.apiBackend.ApiClient;
 import com.alabhya.Shaktiman.apiBackend.UserManagementService;
 import com.alabhya.Shaktiman.models.ConsumerSignUp.TokenResponseConsumerSignUp;
@@ -87,16 +89,19 @@ public class ConsumerSignUpActivity extends AppCompatActivity {
                     editor.apply();
 
                     startActivity(new Intent(getApplicationContext(),ConsumerHomeActivity.class));
-                    Intent intent = new Intent("finish_activity");
+                    Intent intent = new Intent("finish_consumer_landing_activity");
                     sendBroadcast(intent);
+                    Intent i = new Intent("finish_main_activity");
+                    sendBroadcast(i);
                     finish();
+                }else {
+                    Toast.makeText(getApplicationContext(),tokenResponseConsumerSignUp.getMessage(),Toast.LENGTH_SHORT).show();
                 }
-                Log.d("Single",tokenResponseConsumerSignUp.getName()+tokenResponseConsumerSignUp.getId());
             }
 
             @Override
             public void onFailure(Call<TokenResponseConsumerSignUp> call, Throwable t) {
-
+                Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
             }
         });
     }

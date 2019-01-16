@@ -1,4 +1,4 @@
-package com.alabhya.Shaktiman;
+package com.alabhya.Shaktiman.ConsumerUserManagement;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.alabhya.Shaktiman.R;
 
 public class ConsumerLandingActivity extends Activity {
     TextView signUp;
@@ -29,6 +31,7 @@ public class ConsumerLandingActivity extends Activity {
 
 
 
+        registerReceiver(broadcastReceiver, new IntentFilter("finish_consumer_landing_activity"));
         loginButton = findViewById(R.id.loginButton);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,6 +49,22 @@ public class ConsumerLandingActivity extends Activity {
             }
         });
 
+    }
+
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action=="finish_consumer_landing_activity"){
+                finish();
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(broadcastReceiver);
+        super.onDestroy();
     }
 
 }

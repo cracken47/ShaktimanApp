@@ -19,21 +19,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ConsumerLandingActivity"
-            android:parentActivityName=".ConsumerLandingActivity" />
-        <activity android:name=".ConsumerSignUpActivity" />
-        <activity android:name=".ConsumerLoginActivity" />
-        <activity android:name=".ProducerMasonActivity" />
-        <activity android:name=".ProducerLandingActivity" />
-        <activity android:name=".ProducerSignupActivity" />
+            android:name=".ConsumerUserManagement.ConsumerLandingActivity"
+            android:parentActivityName=".ConsumerUserManagement.ConsumerLandingActivity" />
+        <activity android:name=".ConsumerUserManagement.ConsumerSignUpActivity" />
+        <activity android:name=".ConsumerUserManagement.ConsumerLoginActivity" />
+        <activity android:name=".ProducersList.ProducerMasonActivity" />
+        <activity android:name=".ProducerUserManagement.ProducerLandingActivity" />
+        <activity android:name=".ProducerUserManagement.ProducerSignupActivity" />
         <activity
-            android:name=".ConsumerHomeActivity"
+            android:name=".ConsumerMainView.ConsumerHomeActivity"
             android:label="@string/title_activity_home" />
         <activity
-            android:name=".ProducerHomeActivity"
+            android:name=".ProducerMainView.ProducerHomeActivity"
             android:label="@string/title_activity_producer_home" />
-        <activity android:name=".ProducerLabourActivity" />
-        <activity android:name=".OrderPlaceActivity"></activity>
+        <activity android:name=".ProducersList.ProducerLabourActivity" />
+        <activity android:name=".PlaceOrders.OrderPlaceActivity" />
+        <activity android:name=".OrderDetails.ConsumerOrderFullDetailActivity" />
+        <activity android:name=".OrderDetails.ProducerOrderFullDetailsActivity"></activity>
     </application>
 
 </manifest>

@@ -7,12 +7,12 @@
         android:title="@string/title_home" />
 
     <item
-        android:id="@+id/orders"
+        android:id="@+id/profile"
         android:icon="@drawable/ic_dashboard_black_24dp"
         android:title="Orders" />
 
     <item
-        android:id="@+id/profile"
+        android:id="@+id/help"
         android:icon="@drawable/ic_notifications_black_24dp"
         android:title="Profile" />
 

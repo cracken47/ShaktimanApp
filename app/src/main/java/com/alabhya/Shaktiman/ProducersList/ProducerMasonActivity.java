@@ -1,6 +1,9 @@
-package com.alabhya.Shaktiman;
+package com.alabhya.Shaktiman.ProducersList;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +15,8 @@ import android.widget.Button;
 
 
 import com.alabhya.Shaktiman.Adapters.ProducerMasonAdapter;
+import com.alabhya.Shaktiman.PlaceOrders.OrderPlaceActivity;
+import com.alabhya.Shaktiman.R;
 import com.alabhya.Shaktiman.apiBackend.ApiClient;
 import com.alabhya.Shaktiman.apiBackend.UserManagementService;
 import com.alabhya.Shaktiman.models.Producers;
@@ -60,6 +65,8 @@ public class ProducerMasonActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
 
+        registerReceiver(broadcastReceiver, new IntentFilter("finish_mason_list_activity"));
+
         userManagementService = ApiClient.getRetrofitClient().create(UserManagementService.class);
 
         Call<List<Producers>> call = userManagementService.getProducersMasons();
@@ -86,4 +93,20 @@ public class ProducerMasonActivity extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(),OrderPlaceActivity.class));
         }
     };
+
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action=="finish_mason_list_activity"){
+                finish();
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(broadcastReceiver);
+        super.onDestroy();
+    }
 }

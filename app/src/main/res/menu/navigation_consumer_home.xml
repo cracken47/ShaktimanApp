@@ -12,14 +12,14 @@
         android:title="@string/bookings"
         android:visible="true" />
     <item
-        android:id="@+id/profile"
-        android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="@string/title_notifications"
+        android:id="@+id/help"
+        android:icon="@drawable/ic_live_help_black_24dp"
+        android:title="Help"
         android:visible="true" />
     <item
-        android:id="@+id/orders"
+        android:id="@+id/profile"
         android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/title_dashboard"
+        android:title="Profile"
         android:visible="true" />
 
 </menu>

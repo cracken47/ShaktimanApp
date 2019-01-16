@@ -1,4 +1,4 @@
-package com.alabhya.Shaktiman;
+package com.alabhya.Shaktiman.ProducerMainView;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -6,6 +6,11 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+
+import com.alabhya.Shaktiman.ProducerMainView.ProducerHomeFragment;
+import com.alabhya.Shaktiman.ProducerMainView.ProducerOrdersFragment;
+import com.alabhya.Shaktiman.ProducerMainView.ProducerProfileFragment;
+import com.alabhya.Shaktiman.R;
 
 public class ProducerHomeActivity extends AppCompatActivity {
 
@@ -31,10 +36,10 @@ public class ProducerHomeActivity extends AppCompatActivity {
                 case R.id.navigation_home:
                     selectedFragment = new ProducerHomeFragment();
                     break;
-                case R.id.orders:
+                case R.id.profile:
                     selectedFragment = new ProducerOrdersFragment();
                     break;
-                case R.id.profile:
+                case R.id.help:
                     selectedFragment = new ProducerProfileFragment();
                     break;
             }

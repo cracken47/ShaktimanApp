@@ -15,6 +15,17 @@ public class TokenResponseConsumerSignUp {
     @SerializedName("name")
     @Expose
     private String name;
+    @SerializedName("message")
+    @Expose
+    private String message;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
     public Integer getStatus() {
         return status;
