@@ -2,18 +2,19 @@ package com.alabhya.Shaktiman.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.SystemClock;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.alabhya.Shaktiman.OrderDetails.ConsumerOrderFullDetailActivity;
 import com.alabhya.Shaktiman.OrderDetails.ProducerOrderFullDetailsActivity;
 import com.alabhya.Shaktiman.R;
 import com.alabhya.Shaktiman.models.OrderDetailsProducer.OrderDataProducer;
 import com.alabhya.Shaktiman.models.OrderDetailsProducer.OrderDetailsProducer;
-import com.alabhya.Shaktiman.utils.AgeCalculator;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,6 +23,7 @@ import java.util.List;
 
 public class ProducerOrderDetailsAdapter extends RecyclerView.Adapter<ProducerOrderDetailsAdapter.MyViewHolder> {
     private OrderDetailsProducer dataSet;
+    private int mLastClicked = 0;
     List<OrderDataProducer> orderDataProducers;
     Context ctx;
 
@@ -35,6 +37,8 @@ public class ProducerOrderDetailsAdapter extends RecyclerView.Adapter<ProducerOr
         TextView orderDate;
         TextView locality;
         TextView contact;
+        CardView cardView;
+        private long mLastClicked = 0;
         private List<OrderDataProducer> orderDataProducers;
         Context ctx;
 
@@ -50,11 +54,19 @@ public class ProducerOrderDetailsAdapter extends RecyclerView.Adapter<ProducerOr
             orderDate = itemView.findViewById(R.id.producer_order_list_orderDate);
             locality = itemView.findViewById(R.id.producer_order_list_locality);
             contact = itemView.findViewById(R.id.producer_order_list_contact);
+            cardView = itemView.findViewById(R.id.cardView6);
         }
 
         @Override
         public void onClick(View view) {
+
+
             int position = getAdapterPosition();
+
+            if (SystemClock.elapsedRealtime()-mLastClicked<1000){
+                return;
+            }
+            mLastClicked = SystemClock.elapsedRealtime();
             OrderDataProducer orderDataProducer = this.orderDataProducers.get(position);
             Intent intent = new Intent(ctx,ProducerOrderFullDetailsActivity.class);
             intent.putExtra("state",orderDataProducer.getStateName());
@@ -114,11 +126,19 @@ public class ProducerOrderDetailsAdapter extends RecyclerView.Adapter<ProducerOr
         String formatted = output.format(d);
         holder.orderId.setText("Order Id: "+orderDataProducers.get(listPosition).getId());
         int isActive = Integer.parseInt(orderDataProducers.get(listPosition).getIsActive());
+        int isAccepted = Integer.parseInt(orderDataProducers.get(listPosition).getAccepted());
+
         if(isActive==0){
             holder.isActive.setText("Not Active");
         }else holder.isActive.setText("Active");
+
+        if(isActive==1 && isAccepted ==1){
+            holder.cardView.setBackgroundColor(Color.parseColor("#81c784"));
+            holder.producerQuantity.setText("Accepted");
+            holder.producerQuantity.setTextColor(Color.RED);
+        }else holder.producerQuantity.setText("To Accept");
+
         holder.dateOfWork.setText("Work Date: "+orderDataProducers.get(listPosition).getWorkDate());
-        holder.producerQuantity.setText("Producers: "+orderDataProducers.get(listPosition).getProducersQuantity());
         holder.locality.setText("Locality: "+orderDataProducers.get(listPosition).getLocalityName());
         holder.orderDate.setText("Order Date: "+formatted);
         holder.contact.setText("Contact: "+ orderDataProducers.get(listPosition).getContactPhone());

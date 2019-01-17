@@ -48,6 +48,7 @@
                 android:ems="10"
                 android:gravity="center"
                 android:hint="Password"
+                android:maxLength="12"
                 android:inputType="textPassword"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -88,7 +89,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/mobileNumber" />
 
             <RadioGroup
-                android:id="@+id/radioGroup"
+                android:id="@+id/producer_isLabour_radioGroup"
                 android:layout_width="@dimen/_160sdp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -98,14 +99,14 @@
                 app:layout_constraintTop_toBottomOf="@+id/aadhar">
 
                 <RadioButton
-                    android:id="@+id/radioButton"
+                    android:id="@+id/masonRadioButton"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="Mason" />
 
                 <RadioButton
-                    android:id="@+id/radioButton3"
+                    android:id="@+id/labourRadioButton"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -137,7 +138,7 @@
                 android:layout_marginRight="40dp"
                 android:background="@drawable/bg_emailpass"
                 android:ems="10"
-                android:maxLength="16"
+                android:maxLength="12"
                 android:gravity="center"
                 android:hint="Aadhar Number"
                 android:inputType="textPersonName"
@@ -156,7 +157,7 @@
                 android:gravity="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+                app:layout_constraintTop_toBottomOf="@+id/producer_isLabour_radioGroup" />
 
             <org.angmarch.views.NiceSpinner
                 android:id="@+id/citySpinner"

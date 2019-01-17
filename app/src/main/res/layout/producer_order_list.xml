@@ -42,7 +42,7 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="16dp"
                 android:text="Producers"
-                android:textColor="@color/colorPrimaryText"
+                android:textColor="#388e3c"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />

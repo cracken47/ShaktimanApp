@@ -1,5 +1,9 @@
 package com.alabhya.Shaktiman.ProducerMainView;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -21,6 +25,8 @@ public class ProducerHomeActivity extends AppCompatActivity {
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        registerReceiver(broadcastReceiver, new IntentFilter("finish_producer_home_activity"));
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new ProducerHomeFragment()).commit();
@@ -47,5 +53,21 @@ public class ProducerHomeActivity extends AppCompatActivity {
             return true;
         }
     };
+
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action=="finish_producer_home_activity"){
+                finish();
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(broadcastReceiver);
+        super.onDestroy();
+    }
 
 }

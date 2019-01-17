@@ -1,16 +1,22 @@
 package com.alabhya.Shaktiman.OrderDetails;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.SystemClock;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alabhya.Shaktiman.ConsumerUserManagement.ConsumerSignUpActivity;
 import com.alabhya.Shaktiman.ProducerMainView.ProducerHomeActivity;
 import com.alabhya.Shaktiman.R;
 import com.alabhya.Shaktiman.apiBackend.ApiClient;
@@ -29,7 +35,9 @@ public class ProducerOrderFullDetailsActivity extends AppCompatActivity {
 
     private OrderManagementService orderManagementService;
     PlaceOrder placeOrder;
+    private long mLastClicked = 0;
 
+    @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,13 +63,9 @@ public class ProducerOrderFullDetailsActivity extends AppCompatActivity {
         TextView confirmedProducers = findViewById(R.id.full_detail_producer_confirmedProducers);
         TextView workDate = findViewById(R.id.full_detail_producer_workDate);
         TextView consumer = findViewById(R.id.full_detail_producer_name);
-        ImageView backButton = findViewById(R.id.backButton);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        TextView orderDetailsHeading =findViewById(R.id.orderDetailsProducer);
+
+        FloatingActionButton floatingActionButton = findViewById(R.id.producer_full_detail_floatingActionButton);
 
         orderManagementService = ApiClient.getRetrofitClient().create(OrderManagementService.class);
 
@@ -72,9 +76,27 @@ public class ProducerOrderFullDetailsActivity extends AppCompatActivity {
 
         if(activeState == 1 && isAccepted==0){
             fab.setEnabled(true);
-        }else fab.setEnabled(false);
+        }
 
-        fab.setOnClickListener(acceptOrderButtonListener);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        if (activeState == 1 && isAccepted == 1){
+            isActive.setText("Accepted");
+            ConstraintLayout constraintLayout = findViewById(R.id.producer_order_full_detail_head);
+            constraintLayout.setBackgroundColor(Color.parseColor("#4caf50"));
+            orderDetailsHeading.setBackgroundColor(Color.parseColor("#4caf50"));
+            fab.setVisibility(View.GONE);
+            isActive.setTextSize(14);
+        }else if(activeState==0 && isAccepted == 1){
+            fab.setVisibility(View.GONE);
+        }
+
+        fab.setOnClickListener(openDialogListener);
 
 
         SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
@@ -126,12 +148,41 @@ public class ProducerOrderFullDetailsActivity extends AppCompatActivity {
     View.OnClickListener acceptOrderButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            if (SystemClock.elapsedRealtime()-mLastClicked<1000){
+                return;
+            }
+            mLastClicked = SystemClock.elapsedRealtime();
             SharedPreferences sharedPreferences = getSharedPreferences("LoginCredentials",0);
             String userId = sharedPreferences.getString("userId","");
             String orderId = getIntent().getStringExtra("id");
             String date = getIntent().getStringExtra("WorkDate");
 
             acceptOrder(userId,orderId,date);
+        }
+    };
+
+    View.OnClickListener openDialogListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            AlertDialog.Builder mBuilder = new AlertDialog.Builder(ProducerOrderFullDetailsActivity.this);
+            View mView = getLayoutInflater().inflate(R.layout.are_you_sure_dialog,null);
+            mBuilder.setView(mView);
+
+            Button acceptButton,cancelButton;
+
+            acceptButton = mView.findViewById(R.id.accept_dialog_button);
+            cancelButton = mView.findViewById(R.id.cancel_dialog_button);
+            final AlertDialog dialog = mBuilder.create();
+            dialog.show();
+
+            cancelButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.hide();
+                }
+            });
+
+            acceptButton.setOnClickListener(acceptOrderButtonListener);
         }
     };
 }

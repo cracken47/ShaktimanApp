@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +39,7 @@ import retrofit2.Response;
 public class ProducerSignupActivity extends AppCompatActivity {
 
     private static final String TAG = "Single";
+    private static final int DEFAULT = 2131296518;
 
     private DatePickerDialog.OnDateSetListener onDateSetListener;
     private UserManagementService userManagementService;
@@ -55,6 +57,8 @@ public class ProducerSignupActivity extends AppCompatActivity {
     private EditText aadhar;
     private TextView dob;
     private NiceSpinner spinnerCity, spinnerState, spinnerLocality;
+    private RadioGroup isLabour;
+    private String islabour;
 
 
     @Override
@@ -69,9 +73,25 @@ public class ProducerSignupActivity extends AppCompatActivity {
         spinnerCity = findViewById(R.id.citySpinner);
         spinnerLocality = findViewById(R.id.localitySpinner);
         spinnerState = findViewById(R.id.stateSpinner);
+        isLabour = findViewById(R.id.producer_isLabour_radioGroup);
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         Button signUpButton = findViewById(R.id.signUpButton);
 
+        isLabour.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                switch (i){
+                    case R.id.labourRadioButton:
+                        islabour = "1";
+                        break;
+                    case R.id.masonRadioButton:
+                        islabour = "0";
+
+                }
+
+                Log.d("Single",islabour);
+            }
+        });
 
         /*   **************************
              ***TOOLBAR SECTION CODE***
@@ -275,6 +295,7 @@ public class ProducerSignupActivity extends AppCompatActivity {
     View.OnClickListener signUpButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+
             String fullname = fullName.getText().toString().trim();
             boolean isvalidName = new Validator().validInput(fullname);
             Log.d(TAG, "" + isvalidName + fullname);
@@ -287,8 +308,7 @@ public class ProducerSignupActivity extends AppCompatActivity {
             boolean isValidDob = new Validator().validInput(dateOfBirth);
             String adhar = aadhar.getText().toString().trim();
             boolean isValidAdhar = new Validator().isvalidAadhar(adhar);
-            String isLabour = "0";
-            boolean isValidLabour = new Validator().validInput(isLabour);
+            boolean isValidLabour = new Validator().validInput(islabour);
 
             if (!isvalidName) {
                 Toast.makeText(getApplicationContext(), "Please Enter Name", Toast.LENGTH_SHORT).show();
@@ -306,7 +326,7 @@ public class ProducerSignupActivity extends AppCompatActivity {
                 try {
                     String cityId = "" + cities.get(spinnerCity.getSelectedIndex() - 1).getId();
                     String localityId = "" + localities.get(spinnerLocality.getSelectedIndex() - 1).getId();
-                    producerSignUp(fullname, pass, phone, stateId, cityId, localityId, dateOfBirth, adhar, isLabour);
+                    producerSignUp(fullname, pass, phone, stateId, cityId, localityId, dateOfBirth, adhar, islabour);
                 } catch (Exception e) {
                     Toast.makeText(getApplicationContext(), "Please Choose City and Locality", Toast.LENGTH_SHORT).show();
                 }

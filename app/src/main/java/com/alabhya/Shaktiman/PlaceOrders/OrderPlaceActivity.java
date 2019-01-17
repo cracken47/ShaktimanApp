@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -61,6 +62,7 @@ public class OrderPlaceActivity extends AppCompatActivity {
     private TextView workDate;
     private DatePickerDialog.OnDateSetListener onDateSetListener;
     private Button placeOrderButton;
+    private long mLastClicked = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -274,6 +276,10 @@ public class OrderPlaceActivity extends AppCompatActivity {
     View.OnClickListener placeOrderButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            if (SystemClock.elapsedRealtime()-mLastClicked<1000){
+                return;
+            }
+            mLastClicked = SystemClock.elapsedRealtime();
             String userid,stateid,cityid,localityid,Flat,street,contact,workdesc,workdate;
             String producerQuant,Area,Landmark;
             HashMap<String,String> hashMap;

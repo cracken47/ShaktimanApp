@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -12,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,12 +22,11 @@ import com.alabhya.Shaktiman.apiBackend.OrderManagementService;
 import com.alabhya.Shaktiman.models.OrderDetailsProducer.OrderDataProducer;
 import com.alabhya.Shaktiman.models.OrderDetailsProducer.OrderDetailsProducer;
 
-import org.angmarch.views.NiceSpinner;
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import javax.sql.StatementEvent;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,16 +44,16 @@ public class ProducerHomeFragment extends Fragment {
     private OrderManagementService orderManagementService;
     private List<OrderDataProducer> orderDataProducers;
     private OrderDetailsProducer orderDetailsProducer;
-    private Context context;
     private CardView cardView;
     private Button viewDetails;
+    private ProgressBar progressBar;
+    private TextView Active;
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         orderManagementService = ApiClient.getRetrofitClient().create(OrderManagementService.class);
         SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("LoginCredentials",0);
         getOrders(sharedPreferences.getString("userId",""));
-        context = getActivity();
     }
 
     @Override
@@ -69,6 +68,10 @@ public class ProducerHomeFragment extends Fragment {
         locality = view.findViewById(R.id.producer_locality);
         producers = view.findViewById(R.id.producer_producerQuant);
         cardView = view.findViewById(R.id.cardView6);
+        progressBar =view.findViewById(R.id.producer_home_progressBar);
+        Active = view.findViewById(R.id.isActiveProducerOrder);
+
+        progressBar.setVisibility(View.VISIBLE);
 
         viewDetails = view.findViewById(R.id.producer_viewDetailsButton);
 
@@ -83,6 +86,7 @@ public class ProducerHomeFragment extends Fragment {
         orderDetailsProducerCall.enqueue(new Callback<OrderDetailsProducer>() {
             @Override
             public void onResponse(Call<OrderDetailsProducer> call, Response<OrderDetailsProducer> response) {
+                progressBar.setVisibility(View.GONE);
                 orderDetailsProducer = response.body();
                 Log.d("Single",orderDetailsProducer.getStatus().toString());
                 orderDataProducers = orderDetailsProducer.getData();
@@ -107,11 +111,16 @@ public class ProducerHomeFragment extends Fragment {
 
 
                 try {
+                    int isActive = Integer.parseInt(orderDataProducers.get(orderDataProducers.size()-1).getIsActive());
+                    int isAccepted = Integer.parseInt(orderDataProducers.get(orderDataProducers.size()-1).getAccepted());
+
+                    if (isActive == 1 && isAccepted==1){
+                        producers.setText("Accepted");
+                    }else producers.setText("To Accept");
                     orderId.setText(orderDataProducers.get(orderDataProducers.size()-1).getId());
                     workDate.setText(orderDataProducers.get(orderDataProducers.size()-1).getWorkDate());
                     contact.setText(orderDataProducers.get(orderDataProducers.size()-1).getContactPhone());
                     locality.setText(orderDataProducers.get(orderDataProducers.size()-1).getLocalityName());
-                    producers.setText(orderDataProducers.get(orderDataProducers.size()-1).getProducersQuantity());
                 }catch (Exception e){
                     Toast.makeText(getActivity(),"No Orders Found",Toast.LENGTH_SHORT).show();
                 }
