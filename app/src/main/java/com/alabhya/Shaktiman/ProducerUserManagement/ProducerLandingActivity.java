@@ -72,6 +72,8 @@ public class ProducerLandingActivity extends AppCompatActivity {
                    editor.putString("phone",phone);
                    editor.putString("password",password);
                    editor.putBoolean("isProducer",true);
+                   editor.putString("userId",""+tokenResponse.getId());
+                   editor.putString("name",tokenResponse.getName());
                    editor.apply();
                    Log.d("Single","Login Data"+phone+password+tokenResponse.getStatus());
                    startActivity(new Intent(getApplicationContext(),ProducerHomeActivity.class));

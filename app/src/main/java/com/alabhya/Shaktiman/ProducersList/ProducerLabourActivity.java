@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.alabhya.Shaktiman.Adapters.ProducerLabourAdapter;
 import com.alabhya.Shaktiman.R;
@@ -32,6 +33,7 @@ public class ProducerLabourActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ProducerLabourAdapter producerLabourAdapter;
     private List<Producers> producers;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +74,8 @@ public class ProducerLabourActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
+        progressBar = findViewById(R.id.producer_labour_progressBar);
+        progressBar.setVisibility(View.VISIBLE);
 
         Button continueLabour = findViewById(R.id.continueLabour);
         continueLabour.setOnClickListener(continueLabourButtonListener);
@@ -83,6 +87,7 @@ public class ProducerLabourActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Producers>>() {
             @Override
             public void onResponse(Call<List<Producers>> call, Response<List<Producers>> response) {
+                progressBar.setVisibility(View.GONE);
                 producers = response.body();
                 producerLabourAdapter = new ProducerLabourAdapter(producers,getApplicationContext());
                 Log.d("Single",""+producers);
@@ -91,7 +96,7 @@ public class ProducerLabourActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Producers>> call, Throwable t) {
-
+                progressBar.setVisibility(View.GONE);
             }
         });
     }

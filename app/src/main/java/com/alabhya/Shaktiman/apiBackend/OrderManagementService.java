@@ -48,4 +48,13 @@ public interface OrderManagementService {
              @Field("landmark") String landmark,
              @FieldMap HashMap<String, String> hashMap
              );
+
+    @FormUrlEncoded
+    @Headers({"Authorization:674532","User-Agent:shaktiM@nApp","Content-Type:application/x-www-form-urlencoded"})
+    @POST("acceptOrder.php")
+    Call<PlaceOrder> acceptOrder
+            (   @Field("userId") String userId,
+                @Field("orderId") String orderId,
+                @Field("date") String date
+            );
 }

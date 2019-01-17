@@ -190,6 +190,8 @@ public class ProducerSignupActivity extends AppCompatActivity {
                     editor.putString("phone",phone);
                     editor.putString("password",password);
                     editor.putBoolean("isProducer",true);
+                    editor.putString("name",tokenResponseProducerSignUp.getName());
+                    editor.putString("userId",""+tokenResponseProducerSignUp.getId());
                     editor.apply();
                     Log.d("Single","Login Data"+phone+password);
                     startActivity(new Intent(getApplicationContext(), ProducerHomeActivity.class));
@@ -296,9 +298,9 @@ public class ProducerSignupActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Please Enter a valid Phone Number", Toast.LENGTH_SHORT).show();
             } else if (!isValidDob) {
                 Toast.makeText(getApplicationContext(), "Please Enter your Date of Birth", Toast.LENGTH_SHORT).show();
-            } else if (!isValidAdhar) {
-                Toast.makeText(getApplicationContext(), "Please Enter a valid Aadhar Number", Toast.LENGTH_SHORT).show();
-            } else if (!isValidLabour) {
+            } //else if (!isValidAdhar) {
+               // Toast.makeText(getApplicationContext(), "Please Enter a valid Aadhar Number", Toast.LENGTH_SHORT).show();
+             else if (!isValidLabour) {
                 Toast.makeText(getApplicationContext(), "Please Choose! Are You a mason or labour", Toast.LENGTH_SHORT).show();
             } else {
                 try {

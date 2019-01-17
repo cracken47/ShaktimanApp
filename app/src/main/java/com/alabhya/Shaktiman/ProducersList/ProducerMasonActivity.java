@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.preference.PreferenceGroup;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 
 import com.alabhya.Shaktiman.Adapters.ProducerMasonAdapter;
@@ -34,6 +36,7 @@ public class ProducerMasonActivity extends AppCompatActivity {
     private ProducerMasonAdapter producerMasonAdapter;
     private List<Producers> producers;
     private UserManagementService userManagementService;
+    private ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +68,9 @@ public class ProducerMasonActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
 
+        progressBar = findViewById(R.id.activity_producer_mason_progressBar);
+        progressBar.setVisibility(View.VISIBLE);
+
         registerReceiver(broadcastReceiver, new IntentFilter("finish_mason_list_activity"));
 
         userManagementService = ApiClient.getRetrofitClient().create(UserManagementService.class);
@@ -74,6 +80,7 @@ public class ProducerMasonActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Producers>>() {
             @Override
             public void onResponse(Call<List<Producers>> call, Response<List<Producers>> response) {
+                progressBar.setVisibility(View.GONE);
                 producers = response.body();
                 producerMasonAdapter = new ProducerMasonAdapter(producers,getApplicationContext());
                 Log.d("Single",""+producers);
@@ -82,6 +89,7 @@ public class ProducerMasonActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Producers>> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
 
             }
         });

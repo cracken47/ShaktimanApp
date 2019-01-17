@@ -35,15 +35,6 @@ public class ConsumerBookingFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this.getActivity().getApplicationContext();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_consumer_booking, container, false);
-        bookingRecyclerView = view.findViewById(R.id.bookinRecyclerView);
-        layoutManager = new LinearLayoutManager(this.getActivity());
-        bookingRecyclerView.setLayoutManager(layoutManager);
 
         orderManagementService = ApiClient.getRetrofitClient().create(OrderManagementService.class);
 
@@ -65,6 +56,15 @@ public class ConsumerBookingFragment extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view =  inflater.inflate(R.layout.fragment_consumer_booking, container, false);
+        bookingRecyclerView = view.findViewById(R.id.bookinRecyclerView);
+        layoutManager = new LinearLayoutManager(this.getActivity());
+        bookingRecyclerView.setLayoutManager(layoutManager);
 
         return view;
     }
