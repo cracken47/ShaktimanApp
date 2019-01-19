@@ -7,9 +7,9 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.SystemClock;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -20,13 +20,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alabhya.Shaktiman.ConsumerMainView.ConsumerHomeActivity;
-import com.alabhya.Shaktiman.ProducerUserManagement.ProducerSignupActivity;
 import com.alabhya.Shaktiman.R;
 import com.alabhya.Shaktiman.apiBackend.ApiClient;
 import com.alabhya.Shaktiman.apiBackend.OrderManagementService;
 import com.alabhya.Shaktiman.apiBackend.UserManagementService;
 import com.alabhya.Shaktiman.models.Location;
-import com.alabhya.Shaktiman.models.PlaceOrder;
+import com.alabhya.Shaktiman.models.HttpResponse;
 import com.alabhya.Shaktiman.utils.Validator;
 
 import org.angmarch.views.NiceSpinner;
@@ -169,16 +168,16 @@ public class OrderPlaceActivity extends AppCompatActivity {
                              String area,String landmark,HashMap<String,String> hashMapProducerId
                             )
     {
-        Call<PlaceOrder> placeOrderCall = orderManagementService.placeOrder(userId,stateId,cityId,localityId,
+        Call<HttpResponse> placeOrderCall = orderManagementService.placeOrder(userId,stateId,cityId,localityId,
                                           flat,streetName,contact,workDesc,workDate,
                                           producerQuantity,area,landmark,hashMapProducerId);
 
-        placeOrderCall.enqueue(new Callback<PlaceOrder>() {
+        placeOrderCall.enqueue(new Callback<HttpResponse>() {
             @Override
-            public void onResponse(Call<PlaceOrder> call, Response<PlaceOrder> response) {
-                PlaceOrder placeOrder = response.body();
+            public void onResponse(Call<HttpResponse> call, Response<HttpResponse> response) {
+                HttpResponse httpResponse = response.body();
 
-                Toast.makeText(getApplicationContext(),placeOrder.getMessage(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), httpResponse.getMessage(),Toast.LENGTH_SHORT).show();
 
                 startActivity(new Intent(getApplicationContext(),ConsumerHomeActivity.class));
                 Intent consumerHome = new Intent("finish_consumer_home_activity");
@@ -197,7 +196,7 @@ public class OrderPlaceActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<PlaceOrder> call, Throwable t) {
+            public void onFailure(Call<HttpResponse> call, Throwable t) {
 
             }
         });
@@ -248,7 +247,7 @@ public class OrderPlaceActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Location>> call, Throwable t) {
-
+                call.clone().enqueue(this);
             }
         });
     }
@@ -301,12 +300,16 @@ public class OrderPlaceActivity extends AppCompatActivity {
             Validator validator = new Validator();
 
             if(!validator.validInput(street)){
+                streetName.setError("Street name must not be empty!");
                 Toast.makeText(getApplicationContext(), "Please Enter Street Name", Toast.LENGTH_SHORT).show();
             }else if(!validator.validInput(Area)){
+                area.setError("Area must not be empty!");
                 Toast.makeText(getApplicationContext(), "Please Enter Area", Toast.LENGTH_SHORT).show();
             }else if(!validator.isValidPhone(contact)){
+                contactNumber.setError("Please Enter a valid Mobile Number");
                 Toast.makeText(getApplicationContext(), "Please Enter a valid Mobile Number", Toast.LENGTH_SHORT).show();
             }else if(!validator.validInput(workdesc)){
+                workDesc.setError("Work description must not be empty!");
                 Toast.makeText(getApplicationContext(), "Please Enter Work Description", Toast.LENGTH_SHORT).show();
             }else if (!validator.validInput(workdate)){
                 Toast.makeText(getApplicationContext(), "Please choose a Work date", Toast.LENGTH_SHORT).show();

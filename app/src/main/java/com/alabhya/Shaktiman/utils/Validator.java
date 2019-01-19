@@ -27,7 +27,7 @@ public class Validator {
     }
 
     public boolean isValidPassword(String password){
-        Pattern phonePattern = Pattern.compile("\\d{6,12}");
+        Pattern phonePattern = Pattern.compile("^(?=.*\\d)(?=.*[a-zA-Z])(?!.*[\\W_\\x7B-\\xFF]).{6,15}$");
         return phonePattern.matcher(password).matches();
     }
 }

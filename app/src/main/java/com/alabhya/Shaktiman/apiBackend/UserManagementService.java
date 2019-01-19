@@ -3,8 +3,8 @@ package com.alabhya.Shaktiman.apiBackend;
 
 import com.alabhya.Shaktiman.models.ConsumerSignIn.TokenResponseConsumerSignIn;
 import com.alabhya.Shaktiman.models.ConsumerSignUp.TokenResponseConsumerSignUp;
+import com.alabhya.Shaktiman.models.Producer;
 import com.alabhya.Shaktiman.models.Location;
-import com.alabhya.Shaktiman.models.Producers;
 import com.alabhya.Shaktiman.models.ProducerSignIn.TokenResponseProducerLogin;
 import com.alabhya.Shaktiman.models.ProducerSignup.TokenResponseProducerSignUp;
 
@@ -21,11 +21,11 @@ public interface UserManagementService {
 
     @Headers({"Authorization:674532","User-Agent:shaktiM@nApp"})
     @GET("getProducersLabour.php")
-    Call<List<Producers>> getProducersLabours();
+    Call<List<Producer>> getProducersLabours();
 
     @Headers({"Authorization:674532","User-Agent:shaktiM@nApp"})
     @GET("getProducersMason.php")
-    Call<List<Producers>> getProducersMasons();
+    Call<List<Producer>> getProducersMasons();
 
     @Headers({"Authorization:674532","User-Agent:shaktiM@nApp"})
     @GET("getCities.php")

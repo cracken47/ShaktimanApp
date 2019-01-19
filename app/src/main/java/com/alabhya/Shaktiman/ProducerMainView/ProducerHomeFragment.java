@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.cardview.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,8 +25,6 @@ import com.alabhya.Shaktiman.models.OrderDetailsProducer.OrderDetailsProducer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
-import javax.sql.StatementEvent;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -55,6 +53,7 @@ public class ProducerHomeFragment extends Fragment {
         SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("LoginCredentials",0);
         getOrders(sharedPreferences.getString("userId",""));
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

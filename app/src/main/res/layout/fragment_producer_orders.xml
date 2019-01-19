@@ -6,7 +6,7 @@
     tools:context="com.alabhya.Shaktiman.ProducerMainView.ProducerOrdersFragment">
 
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/producerBookingHead"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_160sdp"
@@ -42,9 +42,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView26" />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/producerBookingRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

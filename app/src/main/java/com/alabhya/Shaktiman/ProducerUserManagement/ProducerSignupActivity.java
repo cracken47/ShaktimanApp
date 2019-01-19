@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,17 +16,22 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alabhya.Shaktiman.ConsumerUserManagement.ConsumerSignUpActivity;
 import com.alabhya.Shaktiman.ProducerMainView.ProducerHomeActivity;
 import com.alabhya.Shaktiman.R;
 import com.alabhya.Shaktiman.apiBackend.ApiClient;
+import com.alabhya.Shaktiman.apiBackend.OtpVerificationService;
 import com.alabhya.Shaktiman.apiBackend.UserManagementService;
+import com.alabhya.Shaktiman.models.HttpResponse;
 import com.alabhya.Shaktiman.models.Location;
 import com.alabhya.Shaktiman.models.ProducerSignup.TokenResponseProducerSignUp;
 import com.alabhya.Shaktiman.utils.Validator;
+import com.goodiebag.pinview.Pinview;
 
 import org.angmarch.views.NiceSpinner;
 
@@ -39,7 +46,6 @@ import retrofit2.Response;
 public class ProducerSignupActivity extends AppCompatActivity {
 
     private static final String TAG = "Single";
-    private static final int DEFAULT = 2131296518;
 
     private DatePickerDialog.OnDateSetListener onDateSetListener;
     private UserManagementService userManagementService;
@@ -59,6 +65,11 @@ public class ProducerSignupActivity extends AppCompatActivity {
     private NiceSpinner spinnerCity, spinnerState, spinnerLocality;
     private RadioGroup isLabour;
     private String islabour;
+    private AlertDialog otpDialog;
+    private ProgressBar otpProgressBar;
+    private OtpVerificationService otpVerificationService;
+    private Pinview otpView;
+    private String phone;
 
 
     @Override
@@ -74,7 +85,7 @@ public class ProducerSignupActivity extends AppCompatActivity {
         spinnerLocality = findViewById(R.id.localitySpinner);
         spinnerState = findViewById(R.id.stateSpinner);
         isLabour = findViewById(R.id.producer_isLabour_radioGroup);
-        android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+        androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         Button signUpButton = findViewById(R.id.signUpButton);
 
         isLabour.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -121,7 +132,7 @@ public class ProducerSignupActivity extends AppCompatActivity {
          */
 
         userManagementService = ApiClient.getRetrofitClient().create(UserManagementService.class);
-
+        otpVerificationService = ApiClient.getRetrofitClient().create(OtpVerificationService.class);
         // @GET request getCities.php
         getCities();
 
@@ -217,6 +228,8 @@ public class ProducerSignupActivity extends AppCompatActivity {
                     startActivity(new Intent(getApplicationContext(), ProducerHomeActivity.class));
                     Intent intent = new Intent("finish_main_activity");
                     sendBroadcast(intent);
+                    Intent intent_two = new Intent("finish_producer_landing_activity");
+                    sendBroadcast(intent_two);
                     finish();
                     TokenResponseProducerSignUp response1 = response.body();
                     Log.d("Single", "" + response1.getName() + response1.getStatus());
@@ -285,7 +298,7 @@ public class ProducerSignupActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Location>> call, Throwable t) {
-
+                call.clone().enqueue(this);
             }
         });
     }
@@ -295,15 +308,27 @@ public class ProducerSignupActivity extends AppCompatActivity {
     View.OnClickListener signUpButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            AlertDialog.Builder mBuilder = new AlertDialog.Builder(ProducerSignupActivity.this);
+            View mView = getLayoutInflater().inflate(R.layout.dialog_otp_verification,null);
+            mBuilder.setView(mView);
+            otpDialog = mBuilder.create();
+
+            otpView = mView.findViewById(R.id.pinview);
+            otpProgressBar = mView.findViewById(R.id.otpProgressBar);
+
+            Button verifyOtpButton = mView.findViewById(R.id.verify_otp_button);
+            verifyOtpButton.setOnClickListener(verifyOtpListener);
+
+            TextView resendButton = mView.findViewById(R.id.resend_otp);
+            resendButton.setOnClickListener(resendOtpListener);
 
             String fullname = fullName.getText().toString().trim();
             boolean isvalidName = new Validator().validInput(fullname);
             Log.d(TAG, "" + isvalidName + fullname);
             String pass = password.getText().toString().trim();
-            boolean isValidPassword = new Validator().validInput(pass);
-            String phone = mobileNumber.getText().toString().trim();
+            boolean isValidPassword = new Validator().isValidPassword(pass);
+            phone = mobileNumber.getText().toString().trim();
             boolean isValidPhone = new Validator().isValidPhone(phone);
-            String stateId = "1";
             String dateOfBirth = dob.getText().toString().trim();
             boolean isValidDob = new Validator().validInput(dateOfBirth);
             String adhar = aadhar.getText().toString().trim();
@@ -311,25 +336,25 @@ public class ProducerSignupActivity extends AppCompatActivity {
             boolean isValidLabour = new Validator().validInput(islabour);
 
             if (!isvalidName) {
+                fullName.setError("Name must not be empty!");
                 Toast.makeText(getApplicationContext(), "Please Enter Name", Toast.LENGTH_SHORT).show();
             } else if (!isValidPassword) {
-                Toast.makeText(getApplicationContext(), "Please Enter a Valid Password", Toast.LENGTH_SHORT).show();
+                password.setError("Please Enter a Valid Password(at least one letter (a-z or A-Z) and one number(0-9)[Length: 6-15]");
+                Toast.makeText(getApplicationContext(),"Please Enter a valid password",Toast.LENGTH_SHORT).show();
             } else if (!isValidPhone) {
+                mobileNumber.setError("Please Enter a valid Phone Number");
                 Toast.makeText(getApplicationContext(), "Please Enter a valid Phone Number", Toast.LENGTH_SHORT).show();
             } else if (!isValidDob) {
+                dob.setError("Please Enter your Date of Birth");
                 Toast.makeText(getApplicationContext(), "Please Enter your Date of Birth", Toast.LENGTH_SHORT).show();
-            } //else if (!isValidAdhar) {
-               // Toast.makeText(getApplicationContext(), "Please Enter a valid Aadhar Number", Toast.LENGTH_SHORT).show();
-             else if (!isValidLabour) {
+            } else if (!isValidAdhar) {
+                aadhar.setError("Please enter a valid Aadhar Number");
+                Toast.makeText(getApplicationContext(), "Please Enter a valid Aadhar Number", Toast.LENGTH_SHORT).show();
+            }else if (!isValidLabour) {
                 Toast.makeText(getApplicationContext(), "Please Choose! Are You a mason or labour", Toast.LENGTH_SHORT).show();
-            } else {
-                try {
-                    String cityId = "" + cities.get(spinnerCity.getSelectedIndex() - 1).getId();
-                    String localityId = "" + localities.get(spinnerLocality.getSelectedIndex() - 1).getId();
-                    producerSignUp(fullname, pass, phone, stateId, cityId, localityId, dateOfBirth, adhar, islabour);
-                } catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), "Please Choose City and Locality", Toast.LENGTH_SHORT).show();
-                }
+            }else {
+                 getOtp(phone);
+                 otpDialog.show();
             }
         }
     };
@@ -354,6 +379,33 @@ public class ProducerSignupActivity extends AppCompatActivity {
         }
     };
 
+    View.OnClickListener resendOtpListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            otpProgressBar.setVisibility(View.VISIBLE);
+            getOtp(phone);
+        }
+    };
+
+    View.OnClickListener verifyOtpListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            otpProgressBar.setVisibility(View.VISIBLE);
+            String otp = otpView.getValue();
+            verifyOtp(phone,otp);
+        }
+    };
+
+    /**
+     * Function to get Age From DOB
+     *
+     * @param year Year Of Birth
+     * @param month Month Of Birth
+     * @param day Day Of Birth
+     *
+     * @return Age
+     */
+
     private String getAge(int year, int month, int day){
         Calendar dob = Calendar.getInstance();
         Calendar today = Calendar.getInstance();
@@ -370,6 +422,84 @@ public class ProducerSignupActivity extends AppCompatActivity {
         String ageS = ageInt.toString();
 
         return ageS;
+    }
+
+    /**
+     * Function to get OTP
+     *
+     * @param phone User Phone Number
+     */
+    private void getOtp(String phone){
+        Call<HttpResponse> getOtpCall = otpVerificationService.getOtp(phone);
+
+        getOtpCall.enqueue(new Callback<HttpResponse>() {
+            @Override
+            public void onResponse(Call<HttpResponse> call, Response<HttpResponse> response) {
+                otpProgressBar.setVisibility(View.GONE);
+                try {
+                    HttpResponse httpResponse = response.body();
+                    if(httpResponse.getStatus() == 200){
+                        Toast.makeText(getApplicationContext(),httpResponse.getMessage(),Toast.LENGTH_LONG).show();
+                    }else{
+                        otpDialog.hide();
+                        Toast.makeText(getApplicationContext(),httpResponse.getMessage(),Toast.LENGTH_LONG).show();
+                    }
+                }catch (NullPointerException e){
+                    Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HttpResponse> call, Throwable t) {
+                otpProgressBar.setVisibility(View.GONE);
+                Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * Function to get
+     * @param phone
+     * @param otp
+     */
+    private void verifyOtp(String phone, String otp){
+        Call<HttpResponse> verifyOtpCall = otpVerificationService.verifyOtp(phone,otp);
+
+        verifyOtpCall.enqueue(new Callback<HttpResponse>() {
+            @Override
+            public void onResponse(Call<HttpResponse> call, Response<HttpResponse> response) {
+                otpProgressBar.setVisibility(View.GONE);
+                try {
+                    HttpResponse httpResponse = response.body();
+                    Toast.makeText(getApplicationContext(),httpResponse.getMessage(),Toast.LENGTH_LONG).show();
+                    if (httpResponse.getStatus() == 200){
+                        otpDialog.hide();
+                        String fullname = fullName.getText().toString().trim();
+                        String pass = password.getText().toString().trim();
+                        String phone = mobileNumber.getText().toString().trim();
+                        String stateId = "1";
+                        String dateOfBirth = dob.getText().toString().trim();
+                        String adhar = aadhar.getText().toString().trim();
+
+                        try {
+                            String cityId = "" + cities.get(spinnerCity.getSelectedIndex() - 1).getId();
+                            String localityId = "" + localities.get(spinnerLocality.getSelectedIndex() - 1).getId();
+                            producerSignUp(fullname, pass, phone, stateId, cityId, localityId, dateOfBirth, adhar, islabour);
+                        }catch (ArrayIndexOutOfBoundsException e){
+                            Toast.makeText(getApplicationContext(), "Please Choose City and Locality", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }catch (Exception e){
+                    Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HttpResponse> call, Throwable t) {
+                otpProgressBar.setVisibility(View.GONE);
+                Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 

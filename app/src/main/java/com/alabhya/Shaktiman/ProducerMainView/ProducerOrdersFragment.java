@@ -3,22 +3,22 @@ package com.alabhya.Shaktiman.ProducerMainView;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.alabhya.Shaktiman.Adapters.ConsumerOrderDetailsAdapter;
 import com.alabhya.Shaktiman.Adapters.ProducerOrderDetailsAdapter;
 import com.alabhya.Shaktiman.R;
 import com.alabhya.Shaktiman.apiBackend.ApiClient;
 import com.alabhya.Shaktiman.apiBackend.OrderManagementService;
-import com.alabhya.Shaktiman.models.OrderDetailsConsumer.OrderDetailsConsumer;
 import com.alabhya.Shaktiman.models.OrderDetailsProducer.OrderDetailsProducer;
 
 import retrofit2.Call;
@@ -32,18 +32,24 @@ public class ProducerOrdersFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private ProducerOrderDetailsAdapter adapter;
     private OrderManagementService orderManagementService;
-    Context context;
     private ProgressBar progressBar;
     private Call<OrderDetailsProducer> orderDetailsProducerCall;
+
+    private Context context;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = this.getActivity().getApplicationContext();
 
         orderManagementService = ApiClient.getRetrofitClient().create(OrderManagementService.class);
 
-        final SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("LoginCredentials",0);
+        final SharedPreferences sharedPreferences = context.getSharedPreferences("LoginCredentials",0);
         orderDetailsProducerCall = orderManagementService
                 .getProducerOrders(sharedPreferences.getString("userId",""));
 

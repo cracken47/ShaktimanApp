@@ -5,11 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,7 +19,7 @@ import com.alabhya.Shaktiman.Adapters.ProducerLabourAdapter;
 import com.alabhya.Shaktiman.R;
 import com.alabhya.Shaktiman.apiBackend.ApiClient;
 import com.alabhya.Shaktiman.apiBackend.UserManagementService;
-import com.alabhya.Shaktiman.models.Producers;
+import com.alabhya.Shaktiman.models.Producer;
 
 import java.util.Calendar;
 import java.util.List;
@@ -32,7 +32,7 @@ public class ProducerLabourActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private ProducerLabourAdapter producerLabourAdapter;
-    private List<Producers> producers;
+    private List<Producer> producers;
     private ProgressBar progressBar;
 
     @Override
@@ -82,11 +82,11 @@ public class ProducerLabourActivity extends AppCompatActivity {
 
         UserManagementService userManagementService = ApiClient.getRetrofitClient().create(UserManagementService.class);
 
-        Call<List<Producers>> call = userManagementService.getProducersLabours();
+        Call<List<Producer>> call = userManagementService.getProducersLabours();
 
-        call.enqueue(new Callback<List<Producers>>() {
+        call.enqueue(new Callback<List<Producer>>() {
             @Override
-            public void onResponse(Call<List<Producers>> call, Response<List<Producers>> response) {
+            public void onResponse(Call<List<Producer>> call, Response<List<Producer>> response) {
                 progressBar.setVisibility(View.GONE);
                 producers = response.body();
                 producerLabourAdapter = new ProducerLabourAdapter(producers,getApplicationContext());
@@ -95,7 +95,7 @@ public class ProducerLabourActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<Producers>> call, Throwable t) {
+            public void onFailure(Call<List<Producer>> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
             }
         });

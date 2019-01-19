@@ -11,6 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ChooseLocation"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,7 +23,6 @@
             android:name=".ConsumerUserManagement.ConsumerLandingActivity"
             android:parentActivityName=".ConsumerUserManagement.ConsumerLandingActivity" />
         <activity android:name=".ConsumerUserManagement.ConsumerSignUpActivity" />
-        <activity android:name=".ConsumerUserManagement.ConsumerLoginActivity" />
         <activity android:name=".ProducersList.ProducerMasonActivity" />
         <activity android:name=".ProducerUserManagement.ProducerLandingActivity" />
         <activity android:name=".ProducerUserManagement.ProducerSignupActivity" />
@@ -35,7 +35,7 @@
         <activity android:name=".ProducersList.ProducerLabourActivity" />
         <activity android:name=".PlaceOrders.OrderPlaceActivity" />
         <activity android:name=".OrderDetails.ConsumerOrderFullDetailActivity" />
-        <activity android:name=".OrderDetails.ProducerOrderFullDetailsActivity"></activity>
+        <activity android:name=".OrderDetails.ProducerOrderFullDetailsActivity" />
     </application>
 
 </manifest>

@@ -2,7 +2,7 @@ package com.alabhya.Shaktiman.apiBackend;
 
 import com.alabhya.Shaktiman.models.OrderDetailsConsumer.OrderDetailsConsumer;
 import com.alabhya.Shaktiman.models.OrderDetailsProducer.OrderDetailsProducer;
-import com.alabhya.Shaktiman.models.PlaceOrder;
+import com.alabhya.Shaktiman.models.HttpResponse;
 
 import java.util.HashMap;
 
@@ -33,7 +33,7 @@ public interface OrderManagementService {
     @FormUrlEncoded
     @Headers({"Authorization:674532","User-Agent:shaktiM@nApp","Content-Type:application/x-www-form-urlencoded"})
     @POST("placeOrder.php")
-    Call<PlaceOrder> placeOrder
+    Call<HttpResponse> placeOrder
             (@Field("userId") String  userId,
              @Field("stateId") String stateId,
              @Field("cityId") String cityId,
@@ -52,7 +52,7 @@ public interface OrderManagementService {
     @FormUrlEncoded
     @Headers({"Authorization:674532","User-Agent:shaktiM@nApp","Content-Type:application/x-www-form-urlencoded"})
     @POST("acceptOrder.php")
-    Call<PlaceOrder> acceptOrder
+    Call<HttpResponse> acceptOrder
             (   @Field("userId") String userId,
                 @Field("orderId") String orderId,
                 @Field("date") String date

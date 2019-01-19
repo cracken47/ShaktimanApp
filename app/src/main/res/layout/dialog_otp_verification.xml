@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".OtpVerificationActivity">
-
+    android:layout_height="wrap_content"
+    android:background="#cccccc"
+    tools:layout_editor_absoluteX="8dp"
+    tools:layout_editor_absoluteY="8dp">
 
 
     <com.goodiebag.pinview.Pinview
@@ -18,50 +19,53 @@
         app:hint="0"
         app:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView12"
         app:password="false"
-        app:pinHeight="@dimen/_44sdp"
-        app:pinLength="4"
-        app:pinWidth="@dimen/_44sdp" />
+        app:pinHeight="@dimen/_38sdp"
+        app:pinLength="6"
+        app:pinWidth="@dimen/_28sdp" />
 
     <TextView
-        android:id="@+id/textView10"
+        android:id="@+id/verifyOtp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="Verify OTP"
-        android:textStyle="bold"
+        android:elevation="@dimen/_12sdp"
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/_28ssp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button2"
-        android:layout_width="@dimen/_110sdp"
-        android:layout_height="@dimen/_36sdp"
+        android:id="@+id/verify_otp_button"
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="@dimen/_40sdp"
         android:layout_marginTop="16dp"
         android:background="@drawable/red_button"
         android:text="Verify"
-        android:textStyle="bold"
         android:textColor="@color/colorPrimaryText"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pinview" />
 
     <TextView
-        android:id="@+id/textView11"
+        android:id="@+id/resend_otp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="32dp"
         android:text="Resend OTP"
-        android:textColor="@color/colorSecondaryText"
+        android:clickable="true"
+        android:textColor="@color/colorSpecialText"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
+        app:layout_constraintTop_toBottomOf="@id/verify_otp_button" />
 
     <TextView
         android:id="@+id/textView12"
@@ -72,6 +76,22 @@
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView10" />
+        app:layout_constraintTop_toBottomOf="@+id/verifyOtp" />
 
-</android.support.constraint.ConstraintLayout>
+    <ProgressBar
+        android:id="@+id/otpProgressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

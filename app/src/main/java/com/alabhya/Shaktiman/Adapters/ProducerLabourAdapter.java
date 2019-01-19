@@ -2,8 +2,8 @@ package com.alabhya.Shaktiman.Adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +13,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.alabhya.Shaktiman.R;
-import com.alabhya.Shaktiman.models.Producers;
+import com.alabhya.Shaktiman.models.Producer;
 import com.alabhya.Shaktiman.utils.AgeCalculator;
 import com.google.common.base.Joiner;
 
@@ -22,14 +22,14 @@ import java.util.List;
 
 public class ProducerLabourAdapter extends RecyclerView.Adapter<ProducerLabourAdapter.MyViewHolder> {
 
-    private List<Producers> producers;
+    private List<Producer> producers;
     private String localityName;
     private Context context;
     int count = 0;
     private String age;
     HashMap<Integer,String> userId = new HashMap<>();
 
-    public ProducerLabourAdapter(List<Producers> producers, Context ctx){
+    public ProducerLabourAdapter(List<Producer> producers, Context ctx){
         this.producers = producers;
         this.context = ctx;
     }
@@ -43,7 +43,7 @@ public class ProducerLabourAdapter extends RecyclerView.Adapter<ProducerLabourAd
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        Producers prodModel = producers.get(position);
+        Producer prodModel = producers.get(position);
         holder.Name.setText(producers.get(position).getName());
         String age = new AgeCalculator().getAge(producers.get(position).getDob());
         if(Integer.parseInt(age)>=1) {

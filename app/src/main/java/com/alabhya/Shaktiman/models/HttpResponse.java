@@ -1,9 +1,9 @@
 package com.alabhya.Shaktiman.models;
 
-public class PlaceOrder {
+public class HttpResponse {
     private String message;
 
-    private String status;
+    private int status;
 
     public String getMessage ()
     {
@@ -15,12 +15,12 @@ public class PlaceOrder {
         this.message = message;
     }
 
-    public String getStatus ()
+    public int getStatus ()
     {
         return status;
     }
 
-    public void setStatus (String status)
+    public void setStatus (int status)
     {
         this.status = status;
     }

@@ -1,9 +1,11 @@
 package com.alabhya.Shaktiman.ProducerUserManagement;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +35,7 @@ public class ProducerLandingActivity extends AppCompatActivity {
     private EditText password;
     private UserManagementService userManagementService;;
     private Button signIn;
+    private ProgressBar progressBar;
 
 
     @Override
@@ -40,6 +44,8 @@ public class ProducerLandingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_producer_landing);
 
         signUp = findViewById(R.id.signUp);
+        progressBar = findViewById(R.id.producer_signin_progressBar);
+        progressBar.setVisibility(View.GONE);
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,6 +62,8 @@ public class ProducerLandingActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        registerReceiver(broadcastReceiver, new IntentFilter("finish_producer_landing_activity"));
 
         userManagementService = ApiClient.getRetrofitClient().create(UserManagementService.class);
 
@@ -74,6 +82,7 @@ public class ProducerLandingActivity extends AppCompatActivity {
         signIn.enqueue(new Callback<TokenResponseProducerLogin>() {
             @Override
             public void onResponse(Call<TokenResponseProducerLogin> call, Response<TokenResponseProducerLogin> response) {
+                progressBar.setVisibility(View.GONE);
                TokenResponseProducerLogin tokenResponse = response.body();
                if (response.isSuccessful() && !TextUtils.isEmpty(tokenResponse.getName())){
                    SharedPreferences sharedPreferences = getSharedPreferences("LoginCredentials",Context.MODE_PRIVATE);
@@ -87,7 +96,7 @@ public class ProducerLandingActivity extends AppCompatActivity {
                    editor.apply();
                    Log.d("Single","Login Data"+phone+password+tokenResponse.getStatus());
                    startActivity(new Intent(getApplicationContext(),ProducerHomeActivity.class));
-                   Intent intent = new Intent("finish_activity");
+                   Intent intent = new Intent("finish_main_activity");
                    sendBroadcast(intent);
                    finish();
                }else if (tokenResponse.getStatus()==400){
@@ -98,6 +107,7 @@ public class ProducerLandingActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<TokenResponseProducerLogin> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
                 Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
             }
         });
@@ -106,14 +116,16 @@ public class ProducerLandingActivity extends AppCompatActivity {
     View.OnClickListener signInButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            progressBar.setVisibility(View.VISIBLE);
             String phone = mobileNumber.getText().toString().trim();
             String passKey = password.getText().toString().trim();
 
             if(!new Validator().isValidPhone(phone)){
+                mobileNumber.setError("Please Enter valid Mobile Number");
                 Toast.makeText(getApplicationContext(),"Please Enter valid Mobile Number",Toast.LENGTH_SHORT).show();
             }else if(!new Validator().isValidPassword(passKey)){
-                Toast.makeText(getApplicationContext(),"Please Enter valid Password(Length:6-12)",
-                        Toast.LENGTH_SHORT).show();
+                password.setError("Please Enter a Valid Password(at least one letter (a-z or A-Z) and one number(0-9)[Length: 6-15]");
+                Toast.makeText(getApplicationContext(),"Please Enter a valid password",Toast.LENGTH_SHORT).show();
             }else {
                 Log.d("Single",phone+" "+passKey);
                 try {
@@ -125,4 +137,20 @@ public class ProducerLandingActivity extends AppCompatActivity {
             }
         }
     };
+
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action=="finish_producer_landing_activity"){
+                finish();
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(broadcastReceiver);
+        super.onDestroy();
+    }
 }

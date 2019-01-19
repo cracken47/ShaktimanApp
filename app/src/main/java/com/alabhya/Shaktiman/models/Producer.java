@@ -3,7 +3,7 @@ package com.alabhya.Shaktiman.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Producers {
+public class Producer {
 
     @SerializedName("id")
     @Expose

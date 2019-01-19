@@ -5,23 +5,21 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.SystemClock;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alabhya.Shaktiman.ConsumerUserManagement.ConsumerSignUpActivity;
 import com.alabhya.Shaktiman.ProducerMainView.ProducerHomeActivity;
 import com.alabhya.Shaktiman.R;
 import com.alabhya.Shaktiman.apiBackend.ApiClient;
 import com.alabhya.Shaktiman.apiBackend.OrderManagementService;
-import com.alabhya.Shaktiman.models.PlaceOrder;
+import com.alabhya.Shaktiman.models.HttpResponse;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,7 +32,7 @@ import retrofit2.Response;
 public class ProducerOrderFullDetailsActivity extends AppCompatActivity {
 
     private OrderManagementService orderManagementService;
-    PlaceOrder placeOrder;
+    HttpResponse httpResponse;
     private long mLastClicked = 0;
 
     @SuppressLint("RestrictedApi")
@@ -126,20 +124,20 @@ public class ProducerOrderFullDetailsActivity extends AppCompatActivity {
     }
 
     private void acceptOrder(String userId, String orderId, String date){
-        Call<PlaceOrder> placeOrderCall = orderManagementService.acceptOrder(userId,orderId,date);
+        Call<HttpResponse> placeOrderCall = orderManagementService.acceptOrder(userId,orderId,date);
 
-        placeOrderCall.enqueue(new Callback<PlaceOrder>() {
+        placeOrderCall.enqueue(new Callback<HttpResponse>() {
             @Override
-            public void onResponse(Call<PlaceOrder> call, Response<PlaceOrder> response) {
-                placeOrder = response.body();
-                Toast.makeText(getApplicationContext(),placeOrder.getMessage(),Toast.LENGTH_SHORT).show();
+            public void onResponse(Call<HttpResponse> call, Response<HttpResponse> response) {
+                httpResponse = response.body();
+                Toast.makeText(getApplicationContext(), httpResponse.getMessage(),Toast.LENGTH_SHORT).show();
 
                 startActivity(new Intent(getApplicationContext(),ProducerHomeActivity.class));
                 finish();
             }
 
             @Override
-            public void onFailure(Call<PlaceOrder> call, Throwable t) {
+            public void onFailure(Call<HttpResponse> call, Throwable t) {
 
             }
         });

@@ -4,12 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.preference.PreferenceGroup;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,7 +21,7 @@ import com.alabhya.Shaktiman.PlaceOrders.OrderPlaceActivity;
 import com.alabhya.Shaktiman.R;
 import com.alabhya.Shaktiman.apiBackend.ApiClient;
 import com.alabhya.Shaktiman.apiBackend.UserManagementService;
-import com.alabhya.Shaktiman.models.Producers;
+import com.alabhya.Shaktiman.models.Producer;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class ProducerMasonActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private ProducerMasonAdapter producerMasonAdapter;
-    private List<Producers> producers;
+    private List<Producer> producers;
     private UserManagementService userManagementService;
     private ProgressBar progressBar;
     @Override
@@ -75,11 +75,11 @@ public class ProducerMasonActivity extends AppCompatActivity {
 
         userManagementService = ApiClient.getRetrofitClient().create(UserManagementService.class);
 
-        Call<List<Producers>> call = userManagementService.getProducersMasons();
+        Call<List<Producer>> call = userManagementService.getProducersMasons();
 
-        call.enqueue(new Callback<List<Producers>>() {
+        call.enqueue(new Callback<List<Producer>>() {
             @Override
-            public void onResponse(Call<List<Producers>> call, Response<List<Producers>> response) {
+            public void onResponse(Call<List<Producer>> call, Response<List<Producer>> response) {
                 progressBar.setVisibility(View.GONE);
                 producers = response.body();
                 producerMasonAdapter = new ProducerMasonAdapter(producers,getApplicationContext());
@@ -88,7 +88,7 @@ public class ProducerMasonActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<Producers>> call, Throwable t) {
+            public void onFailure(Call<List<Producer>> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
 
             }
