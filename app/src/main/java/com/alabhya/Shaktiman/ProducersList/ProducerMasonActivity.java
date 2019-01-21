@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +22,7 @@ import com.alabhya.Shaktiman.Adapters.ProducerMasonAdapter;
 import com.alabhya.Shaktiman.PlaceOrders.OrderPlaceActivity;
 import com.alabhya.Shaktiman.R;
 import com.alabhya.Shaktiman.apiBackend.ApiClient;
+import com.alabhya.Shaktiman.apiBackend.ProducerManagementService;
 import com.alabhya.Shaktiman.apiBackend.UserManagementService;
 import com.alabhya.Shaktiman.models.Producer;
 
@@ -35,7 +38,8 @@ public class ProducerMasonActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private ProducerMasonAdapter producerMasonAdapter;
     private List<Producer> producers;
-    private UserManagementService userManagementService;
+    private ProducerManagementService producerManagementService;
+    private static final String DEFAULT = "00000000000000";
     private ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,9 +77,21 @@ public class ProducerMasonActivity extends AppCompatActivity {
 
         registerReceiver(broadcastReceiver, new IntentFilter("finish_mason_list_activity"));
 
-        userManagementService = ApiClient.getRetrofitClient().create(UserManagementService.class);
+        SharedPreferences sharedPreferences1 = getSharedPreferences("ConsumerLocationInfo",0);
 
-        Call<List<Producer>> call = userManagementService.getProducersMasons();
+        String state = sharedPreferences1.getString("stateId",DEFAULT);
+        String city = sharedPreferences1.getString("cityId",DEFAULT);
+        String locality = sharedPreferences1.getString("localityId",DEFAULT);
+
+        getMason(state,city,locality);
+    }
+
+
+
+    private void getMason(String state, String city, String locality){
+        producerManagementService = ApiClient.getRetrofitClient().create(ProducerManagementService.class);
+
+        Call<List<Producer>> call = producerManagementService.getMason(state,city,locality);
 
         call.enqueue(new Callback<List<Producer>>() {
             @Override
@@ -94,6 +110,7 @@ public class ProducerMasonActivity extends AppCompatActivity {
             }
         });
     }
+
 
     View.OnClickListener continueButtonListener = new View.OnClickListener() {
         @Override

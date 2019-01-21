@@ -19,10 +19,14 @@ import android.widget.Toast;
 import com.alabhya.Shaktiman.ConsumerMainView.ConsumerHomeActivity;
 import com.alabhya.Shaktiman.R;
 import com.alabhya.Shaktiman.apiBackend.ApiClient;
+import com.alabhya.Shaktiman.apiBackend.OtpVerificationService;
 import com.alabhya.Shaktiman.apiBackend.UserManagementService;
 import com.alabhya.Shaktiman.models.ConsumerSignIn.TokenResponseConsumerSignIn;
+import com.alabhya.Shaktiman.models.HttpResponse;
 import com.alabhya.Shaktiman.utils.Validator;
+import com.google.android.material.textfield.TextInputEditText;
 
+import androidx.appcompat.app.AlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,6 +37,17 @@ public class ConsumerLandingActivity extends Activity {
     private EditText mobileNumber;
     private EditText password;
     private ProgressBar progressBar;
+    private AlertDialog otpDialog;
+    private AlertDialog phoneDialog;
+    private AlertDialog passwordDialog;
+    private String phoneForgotPassword;
+    private OtpVerificationService otpVerificationService;
+    private ProgressBar otpProgressBar;
+    private TextInputEditText phoneInputEditText;
+    private TextInputEditText otpView;
+    private String otp;
+    private TextInputEditText enterPassword;
+    private TextInputEditText reEnterPassword;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.counsumer_landing_activity);
@@ -52,7 +67,11 @@ public class ConsumerLandingActivity extends Activity {
             }
         });
 
+        TextView forgotPassword = findViewById(R.id.consumer_landing_forgotPassword);
+        forgotPassword.setOnClickListener(forgotPasswordListener);
 
+
+        otpVerificationService = ApiClient.getRetrofitClient().create(OtpVerificationService.class);
 
         registerReceiver(broadcastReceiver, new IntentFilter("finish_consumer_landing_activity"));
         loginButton.setOnClickListener(loginButtonListener);
@@ -120,6 +139,30 @@ public class ConsumerLandingActivity extends Activity {
         });
     }
 
+    private void changePassword(String phone,String password){
+        Call<HttpResponse> changePasswordCall = userManagementService.updatePassword(phone,password);
+
+        changePasswordCall.enqueue(new Callback<HttpResponse>() {
+            @Override
+            public void onResponse(Call<HttpResponse> call, Response<HttpResponse> response) {
+                try {
+                    HttpResponse httpResponse = response.body();
+                    if(httpResponse.getStatus()==200){
+                        passwordDialog.hide();
+                        Toast.makeText(getApplicationContext(),httpResponse.getMessage(),Toast.LENGTH_LONG).show();
+                    }
+                }catch (Exception e){
+                    Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HttpResponse> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     View.OnClickListener loginButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -144,6 +187,139 @@ public class ConsumerLandingActivity extends Activity {
             }
         }
     };
+
+    private View.OnClickListener forgotPasswordListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            AlertDialog.Builder mBuilder = new AlertDialog.Builder(ConsumerLandingActivity.this);
+            View mView = getLayoutInflater().inflate(R.layout.forgot_password_enter_phonenumber_dialog,null);
+            mBuilder.setView(mView);
+            phoneDialog = mBuilder.create();
+            phoneInputEditText = mView.findViewById(R.id.dialogPhone);
+            phoneDialog.show();
+
+            Button submitPhone = mView.findViewById(R.id.phoneSubmitButton);
+            submitPhone.setOnClickListener(submitPhoneListener);
+        }
+    };
+
+    private View.OnClickListener submitPhoneListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            phoneForgotPassword = phoneInputEditText.getText().toString();
+            phoneDialog.hide();
+            AlertDialog.Builder mBuilder = new AlertDialog.Builder(ConsumerLandingActivity.this);
+            View mView = getLayoutInflater().inflate(R.layout.dialog_otp_verification,null);
+            mBuilder.setView(mView);
+            otpDialog = mBuilder.create();
+
+            otpView = mView.findViewById(R.id.pinview);
+            otpDialog.show();
+
+            Log.d("Single",phoneForgotPassword);
+            getOtp(phoneForgotPassword);
+            otpProgressBar = mView.findViewById(R.id.otpProgressBar);
+
+            Button verifyOtpButton = mView.findViewById(R.id.verify_otp_button);
+            verifyOtpButton.setOnClickListener(verifyOtpListener);
+        }
+    };
+
+    private View.OnClickListener verifyOtpListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            otpDialog.hide();
+            progressBar.setVisibility(View.VISIBLE);
+            otp = otpView.getText().toString();
+            verifyOtp(phoneForgotPassword,otp);
+        }
+    };
+
+    private View.OnClickListener submitPasswordListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            String password = enterPassword.getText().toString();
+            String confirmPassword = reEnterPassword.getText().toString();
+
+            if (password.equals(confirmPassword)){
+                changePassword(phoneForgotPassword,password);
+            }else reEnterPassword.setError("Password did not match");
+        }
+    };
+
+    /**
+     * Function to get OTP
+     *
+     * @param phone User Phone Number
+     */
+    private void getOtp(String phone){
+        Call<HttpResponse> getOtpCall = otpVerificationService.getOtp(phone);
+
+        getOtpCall.enqueue(new Callback<HttpResponse>() {
+            @Override
+            public void onResponse(Call<HttpResponse> call, Response<HttpResponse> response) {
+                otpProgressBar.setVisibility(View.GONE);
+                try {
+                    HttpResponse httpResponse = response.body();
+                    if(httpResponse.getStatus() == 200){
+                        Toast.makeText(getApplicationContext(),httpResponse.getMessage(),Toast.LENGTH_LONG).show();
+                    }else{
+                        otpDialog.hide();
+                        Toast.makeText(getApplicationContext(),httpResponse.getMessage(),Toast.LENGTH_LONG).show();
+                    }
+                }catch (NullPointerException e){
+                    Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HttpResponse> call, Throwable t) {
+                otpProgressBar.setVisibility(View.GONE);
+                Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * Function to get
+     * @param phone
+     * @param otp
+     */
+    private void verifyOtp(final String phone, String otp){
+        Call<HttpResponse> verifyOtpCall = otpVerificationService.verifyOtp(phone,otp);
+
+        verifyOtpCall.enqueue(new Callback<HttpResponse>() {
+            @Override
+            public void onResponse(Call<HttpResponse> call, Response<HttpResponse> response) {
+                otpProgressBar.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
+                try {
+                    HttpResponse httpResponse = response.body();
+                    Toast.makeText(getApplicationContext(),httpResponse.getMessage(),Toast.LENGTH_LONG).show();
+                    if (httpResponse.getStatus() == 200){
+                        AlertDialog.Builder mBuilder = new AlertDialog.Builder(ConsumerLandingActivity.this);
+                        View mView = getLayoutInflater().inflate(R.layout.forgotpassword_enter_password_dialog,null);
+                        mBuilder.setView(mView);
+                        passwordDialog = mBuilder.create();
+                        passwordDialog.show();
+                        enterPassword = mView.findViewById(R.id.enterPasswordDialog);
+                        reEnterPassword = mView.findViewById(R.id.reEnterPasswordDialog);
+
+                        Button submitPassword = mView.findViewById(R.id.submitPassword);
+                        submitPassword.setOnClickListener(submitPasswordListener);
+                    }
+                }catch (Exception e){
+                    Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HttpResponse> call, Throwable t) {
+                otpProgressBar.setVisibility(View.GONE);
+                Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     @Override
     protected void onDestroy() {

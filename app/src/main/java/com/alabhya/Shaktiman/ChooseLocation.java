@@ -130,6 +130,7 @@ public class ChooseLocation extends AppCompatActivity {
             SharedPreferences sharedPreferences = getSharedPreferences("ConsumerLocationInfo", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             try {
+                editor.putString("stateId","1");
                 editor.putString("cityId",""+cities.get(spinnerCity.getSelectedIndex()-1).getId());
                 editor.putString("localityId",""+localities.get(spinnerLocality.getSelectedIndex()-1).getId());
                 editor.putString("city",cities.get(spinnerCity.getSelectedIndex()-1).getName());
@@ -147,6 +148,7 @@ public class ChooseLocation extends AppCompatActivity {
         public void onClick(View view) {
             SharedPreferences sharedPreferences = getSharedPreferences("ConsumerLocationInfo", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("stateId","0");
             editor.putString("cityId","0");
             editor.putString("localityId","0");
             editor.putString("city",DEFAULT);

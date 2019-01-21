@@ -32,6 +32,7 @@ import com.alabhya.Shaktiman.models.Location;
 import com.alabhya.Shaktiman.models.ProducerSignup.TokenResponseProducerSignUp;
 import com.alabhya.Shaktiman.utils.Validator;
 import com.goodiebag.pinview.Pinview;
+import com.google.android.material.textfield.TextInputEditText;
 
 import org.angmarch.views.NiceSpinner;
 
@@ -68,7 +69,7 @@ public class ProducerSignupActivity extends AppCompatActivity {
     private AlertDialog otpDialog;
     private ProgressBar otpProgressBar;
     private OtpVerificationService otpVerificationService;
-    private Pinview otpView;
+    private TextInputEditText otpView;
     private String phone;
 
 
@@ -391,8 +392,12 @@ public class ProducerSignupActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             otpProgressBar.setVisibility(View.VISIBLE);
-            String otp = otpView.getValue();
-            verifyOtp(phone,otp);
+            try {
+                String otp = otpView.getText().toString();
+                verifyOtp(phone,otp);
+            }catch (Exception e){
+                otpView.setError("must not be empty!");
+            }
         }
     };
 

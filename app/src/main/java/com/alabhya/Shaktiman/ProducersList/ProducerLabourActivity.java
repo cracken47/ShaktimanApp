@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import com.alabhya.Shaktiman.Adapters.ProducerLabourAdapter;
 import com.alabhya.Shaktiman.R;
 import com.alabhya.Shaktiman.apiBackend.ApiClient;
+import com.alabhya.Shaktiman.apiBackend.ProducerManagementService;
 import com.alabhya.Shaktiman.apiBackend.UserManagementService;
 import com.alabhya.Shaktiman.models.Producer;
 
@@ -34,6 +35,8 @@ public class ProducerLabourActivity extends AppCompatActivity {
     private ProducerLabourAdapter producerLabourAdapter;
     private List<Producer> producers;
     private ProgressBar progressBar;
+    private static final String DEFAULT = "00000000000000";
+    private ProducerManagementService producerManagementService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,9 +83,19 @@ public class ProducerLabourActivity extends AppCompatActivity {
         Button continueLabour = findViewById(R.id.continueLabour);
         continueLabour.setOnClickListener(continueLabourButtonListener);
 
-        UserManagementService userManagementService = ApiClient.getRetrofitClient().create(UserManagementService.class);
+        SharedPreferences sharedPreferences1 = getSharedPreferences("ConsumerLocationInfo",0);
 
-        Call<List<Producer>> call = userManagementService.getProducersLabours();
+        String state = sharedPreferences1.getString("stateId",DEFAULT);
+        String city = sharedPreferences1.getString("cityId",DEFAULT);
+        String locality = sharedPreferences1.getString("localityId",DEFAULT);
+
+        getLabour(state,city,locality);
+    }
+
+    private void getLabour(String state, String city, String locality){
+        producerManagementService = ApiClient.getRetrofitClient().create(ProducerManagementService.class);
+
+        Call<List<Producer>> call = producerManagementService.getLabour(state,city,locality);
 
         call.enqueue(new Callback<List<Producer>>() {
             @Override

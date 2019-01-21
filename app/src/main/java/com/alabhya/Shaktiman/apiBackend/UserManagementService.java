@@ -3,7 +3,7 @@ package com.alabhya.Shaktiman.apiBackend;
 
 import com.alabhya.Shaktiman.models.ConsumerSignIn.TokenResponseConsumerSignIn;
 import com.alabhya.Shaktiman.models.ConsumerSignUp.TokenResponseConsumerSignUp;
-import com.alabhya.Shaktiman.models.Producer;
+import com.alabhya.Shaktiman.models.HttpResponse;
 import com.alabhya.Shaktiman.models.Location;
 import com.alabhya.Shaktiman.models.ProducerSignIn.TokenResponseProducerLogin;
 import com.alabhya.Shaktiman.models.ProducerSignup.TokenResponseProducerSignUp;
@@ -18,14 +18,6 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
 public interface UserManagementService {
-
-    @Headers({"Authorization:674532","User-Agent:shaktiM@nApp"})
-    @GET("getProducersLabour.php")
-    Call<List<Producer>> getProducersLabours();
-
-    @Headers({"Authorization:674532","User-Agent:shaktiM@nApp"})
-    @GET("getProducersMason.php")
-    Call<List<Producer>> getProducersMasons();
 
     @Headers({"Authorization:674532","User-Agent:shaktiM@nApp"})
     @GET("getCities.php")
@@ -79,6 +71,14 @@ public interface UserManagementService {
     Call<TokenResponseConsumerSignIn> signInConsumer
             (@Field("phone") String phone,
             @Field("password") String password
+            );
+
+    @FormUrlEncoded
+    @Headers({"Authorization:674532","User-Agent:shaktiM@nApp","Content-Type:application/x-www-form-urlencoded"})
+    @POST("updatePassword.php")
+    Call<HttpResponse> updatePassword
+            (   @Field("phone") String phone,
+                @Field("password") String password
             );
 
 }

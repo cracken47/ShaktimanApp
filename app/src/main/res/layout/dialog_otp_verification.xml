@@ -4,35 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#cccccc"
     tools:layout_editor_absoluteX="8dp"
     tools:layout_editor_absoluteY="8dp">
 
 
-    <com.goodiebag.pinview.Pinview
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/pinview"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/_180sdp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        app:cursorVisible="false"
-        app:forceKeyboard="true"
-        app:hint="0"
-        app:inputType="number"
+        android:gravity="center"
+        android:inputType="number"
+        android:hint="Enter OTP"
+        android:maxLength="6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView12"
-        app:password="false"
-        app:pinHeight="@dimen/_38sdp"
-        app:pinLength="6"
-        app:pinWidth="@dimen/_28sdp" />
+        app:layout_constraintTop_toBottomOf="@+id/otpSentTextView" />
 
     <TextView
         android:id="@+id/verifyOtp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Verify OTP"
         android:elevation="@dimen/_12sdp"
+        android:text="Verify OTP"
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/_28ssp"
         android:textStyle="bold"
@@ -59,8 +54,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="32dp"
-        android:text="Resend OTP"
         android:clickable="true"
+        android:focusable="true"
+        android:text="Resend OTP"
         android:textColor="@color/colorSpecialText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -68,7 +64,7 @@
         app:layout_constraintTop_toBottomOf="@id/verify_otp_button" />
 
     <TextView
-        android:id="@+id/textView12"
+        android:id="@+id/otpSentTextView"
         android:layout_width="@dimen/_200sdp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -92,6 +88,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.504" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

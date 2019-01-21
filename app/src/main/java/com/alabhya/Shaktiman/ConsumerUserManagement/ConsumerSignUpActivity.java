@@ -25,7 +25,7 @@ import com.alabhya.Shaktiman.apiBackend.UserManagementService;
 import com.alabhya.Shaktiman.models.ConsumerSignUp.TokenResponseConsumerSignUp;
 import com.alabhya.Shaktiman.models.HttpResponse;
 import com.alabhya.Shaktiman.utils.Validator;
-import com.goodiebag.pinview.Pinview;
+import com.google.android.material.textfield.TextInputEditText;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,7 +39,7 @@ public class ConsumerSignUpActivity extends AppCompatActivity {
     private TokenResponseConsumerSignUp tokenResponseConsumerSignUp;
     private Call<TokenResponseConsumerSignUp> consumerSignUpCall;
     private OtpVerificationService otpVerificationService;
-    private Pinview otpView;
+    private TextInputEditText otpView;
     private String name;
     private String phone;
     private String  passKey;
@@ -237,8 +237,12 @@ public class ConsumerSignUpActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             otpProgressBar.setVisibility(View.VISIBLE);
-            String otp = otpView.getValue();
-            verifyOtp(phone,otp);
+            try {
+                String otp = otpView.getText().toString();
+                verifyOtp(phone,otp);
+            }catch (NullPointerException e){
+                otpView.setError("must not be empty!");
+            }
         }
     };
 
