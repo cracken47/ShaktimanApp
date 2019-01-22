@@ -113,6 +113,7 @@ public class ProducerLandingActivity extends AppCompatActivity {
                    editor.putString("phone",phone);
                    editor.putString("password",password);
                    editor.putBoolean("isProducer",true);
+                   editor.putString("isAvailable",tokenResponse.getIsAvailable());
                    editor.putString("userId",""+tokenResponse.getId());
                    editor.putString("name",tokenResponse.getName());
                    editor.apply();
@@ -145,9 +146,8 @@ public class ProducerLandingActivity extends AppCompatActivity {
             if(!new Validator().isValidPhone(phone)){
                 mobileNumber.setError("Please Enter valid Mobile Number");
                 Toast.makeText(getApplicationContext(),"Please Enter valid Mobile Number",Toast.LENGTH_SHORT).show();
-            }else if(!new Validator().isValidPassword(passKey)){
-                password.setError("Please Enter a Valid Password(at least one letter (a-z or A-Z) and one number(0-9)[Length: 6-15]");
-                Toast.makeText(getApplicationContext(),"Please Enter a valid password",Toast.LENGTH_SHORT).show();
+            }else if(!new Validator().validInput(passKey)){
+                password.setError("Password must not be empty!");
             }else {
                 Log.d("Single",phone+" "+passKey);
                 try {
@@ -171,7 +171,7 @@ public class ProducerLandingActivity extends AppCompatActivity {
     };
 
     private void changePassword(String phone,String password){
-        Call<HttpResponse> changePasswordCall = userManagementService.updatePassword(phone,password);
+        Call<HttpResponse> changePasswordCall = userManagementService.updatePasswordProducer(phone,password);
 
         changePasswordCall.enqueue(new Callback<HttpResponse>() {
             @Override

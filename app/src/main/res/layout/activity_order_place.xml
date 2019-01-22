@@ -12,52 +12,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <org.angmarch.views.NiceSpinner
-                android:id="@+id/place_order_spinnerState"
-                android:layout_width="@dimen/editbox_width_email_password"
-                android:layout_height="@dimen/editbox_height_email_password"
-                android:layout_marginTop="32dp"
-                android:background="@drawable/bg_emailpass"
-                android:gravity="center"
-                android:hint="Choose State"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <org.angmarch.views.NiceSpinner
-                android:id="@+id/place_order_spinnerCity"
-                android:layout_width="@dimen/editbox_width_email_password"
-                android:layout_height="@dimen/editbox_height_email_password"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/bg_emailpass"
-                android:completionThreshold="0"
-                android:gravity="center"
-                android:hint="Choose City"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/place_order_spinnerState" />
-
-            <org.angmarch.views.NiceSpinner
-                android:id="@+id/place_order_spinnerLocality"
-                android:layout_width="@dimen/editbox_width_email_password"
-                android:layout_height="@dimen/editbox_height_email_password"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/bg_emailpass"
-                android:completionThreshold="1"
-                android:gravity="center"
-                android:hint="Choose Locality"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/place_order_spinnerCity" />
 
             <EditText
                 android:id="@+id/place_order_flat"
@@ -71,7 +32,7 @@
                 android:inputType="textPersonName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/place_order_spinnerLocality" />
+                app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
             <EditText
                 android:id="@+id/place_order_street"
@@ -180,6 +141,19 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Order Details"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/_28ssp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

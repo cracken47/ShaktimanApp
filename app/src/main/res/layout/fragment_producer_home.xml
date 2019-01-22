@@ -18,9 +18,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="Shaktiman"
+            android:text="@string/app_name"
+            android:textAllCaps="true"
+            android:elevation="@dimen/_64sdp"
             android:textColor="@color/colorSecondaryText"
-            android:textSize="@dimen/_44ssp"
+            android:textSize="@dimen/_36ssp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.507"
@@ -30,12 +32,11 @@
         <TextView
             android:id="@+id/textView28"
             android:layout_width="@dimen/editbox_width_email_password"
-            android:layout_height="@dimen/editbox_height_email_password"
+            android:layout_height="@dimen/_30sdp"
             android:background="@drawable/background_main_rounded"
             android:gravity="center"
             android:text="Manage Your Orders"
             android:textStyle="bold"
-            android:textSize="@dimen/_16ssp"
             android:textColor="@color/colorSecondaryText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -58,14 +59,14 @@
             android:id="@+id/constraintLayout4"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="#cccccc"
+            android:background="#546e7a"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardView6"
+                android:id="@+id/producer_fragment_home_cardView"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_120sdp"
                 android:layout_marginLeft="@dimen/_8sdp"
@@ -100,7 +101,7 @@
                         android:layout_marginEnd="16dp"
                         android:layout_marginRight="16dp"
                         android:layout_marginBottom="16dp"
-                        android:textColor="#4caf50"
+                        android:textColor="@color/text_red"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent" />
@@ -191,14 +192,13 @@
                 android:textColor="#1b5e20"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardView6" />
+                app:layout_constraintTop_toBottomOf="@+id/producer_fragment_home_cardView" />
 
             <TextView
                 android:id="@+id/textView29"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/background_main_rounded"
                 android:padding="@dimen/_8sdp"
                 android:text="Recent Order"
                 android:textColor="@color/colorSecondaryText"

@@ -9,6 +9,7 @@ import android.graphics.drawable.ColorDrawable;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,7 +22,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alabhya.Shaktiman.ConsumerUserManagement.ConsumerSignUpActivity;
+
 import com.alabhya.Shaktiman.ProducerMainView.ProducerHomeActivity;
 import com.alabhya.Shaktiman.R;
 import com.alabhya.Shaktiman.apiBackend.ApiClient;
@@ -31,7 +32,6 @@ import com.alabhya.Shaktiman.models.HttpResponse;
 import com.alabhya.Shaktiman.models.Location;
 import com.alabhya.Shaktiman.models.ProducerSignup.TokenResponseProducerSignUp;
 import com.alabhya.Shaktiman.utils.Validator;
-import com.goodiebag.pinview.Pinview;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.angmarch.views.NiceSpinner;
@@ -92,7 +92,7 @@ public class ProducerSignupActivity extends AppCompatActivity {
         isLabour.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                switch (i){
+                switch (i) {
                     case R.id.labourRadioButton:
                         islabour = "1";
                         break;
@@ -101,13 +101,13 @@ public class ProducerSignupActivity extends AppCompatActivity {
 
                 }
 
-                Log.d("Single",islabour);
+                Log.d("Single", islabour);
             }
         });
 
         /*   **************************
-             ***TOOLBAR SECTION CODE***
-             **************************
+         ***TOOLBAR SECTION CODE***
+         **************************
          */
         setSupportActionBar(toolbar);
 
@@ -128,8 +128,8 @@ public class ProducerSignupActivity extends AppCompatActivity {
         toolbar.setTitle("Producer SignUp");
 
         /*   **************************
-             ***APICALL SECTION CODE***
-             **************************
+         ***APICALL SECTION CODE***
+         **************************
          */
 
         userManagementService = ApiClient.getRetrofitClient().create(UserManagementService.class);
@@ -146,8 +146,8 @@ public class ProducerSignupActivity extends AppCompatActivity {
         spinnerState.attachDataSource(StateName);
 
         /*  **************************
-            ***  DOB SECTION CODE  ***
-            **************************
+         ***  DOB SECTION CODE  ***
+         **************************
          */
         dob = findViewById(R.id.dateOfBirth);
         dob.setOnClickListener(dateOfBirthListener);
@@ -158,13 +158,13 @@ public class ProducerSignupActivity extends AppCompatActivity {
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 month = month + 1;
                 String date;
-                age = getAge(year,month,dayOfMonth);
+                age = getAge(year, month, dayOfMonth);
 
-                SharedPreferences sharedPreferences = getSharedPreferences("LoginCredentials",MODE_PRIVATE);
+                SharedPreferences sharedPreferences = getSharedPreferences("LoginCredentials", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("age",age);
+                editor.putString("age", age);
                 editor.apply();
-                Log.d(TAG,age);
+                Log.d(TAG, age);
 
                 if (month < 10 && dayOfMonth >= 10) {
                     date = year + "-0" + month + "-" + dayOfMonth;
@@ -200,7 +200,6 @@ public class ProducerSignupActivity extends AppCompatActivity {
      * @param dob        Date of Birth of Producer
      * @param adhar      Aadhar Number of Producer
      * @param isLabour   Designation of Producer
-     *
      * @throws ArrayIndexOutOfBoundsException While getting cityId and localityId
      */
 
@@ -216,16 +215,17 @@ public class ProducerSignupActivity extends AppCompatActivity {
             public void onResponse(Call<TokenResponseProducerSignUp> call, Response<TokenResponseProducerSignUp> response) {
                 TokenResponseProducerSignUp tokenResponseProducerSignUp = response.body();
                 if (tokenResponseProducerSignUp.getStatus() == 200) {
-                    SharedPreferences sharedPreferences = getSharedPreferences("LoginCredentials",Context.MODE_PRIVATE);
+                    SharedPreferences sharedPreferences = getSharedPreferences("LoginCredentials", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                    editor.putString("phone",phone);
-                    editor.putString("password",password);
-                    editor.putBoolean("isProducer",true);
-                    editor.putString("name",tokenResponseProducerSignUp.getName());
-                    editor.putString("userId",""+tokenResponseProducerSignUp.getId());
+                    editor.putString("phone", phone);
+                    editor.putString("password", password);
+                    editor.putBoolean("isProducer", true);
+                    editor.putString("isAvailable", "1");
+                    editor.putString("name", tokenResponseProducerSignUp.getName());
+                    editor.putString("userId", "" + tokenResponseProducerSignUp.getId());
                     editor.apply();
-                    Log.d("Single","Login Data"+phone+password);
+                    Log.d("Single", "Login Data" + phone + password);
                     startActivity(new Intent(getApplicationContext(), ProducerHomeActivity.class));
                     Intent intent = new Intent("finish_main_activity");
                     sendBroadcast(intent);
@@ -234,14 +234,14 @@ public class ProducerSignupActivity extends AppCompatActivity {
                     finish();
                     TokenResponseProducerSignUp response1 = response.body();
                     Log.d("Single", "" + response1.getName() + response1.getStatus());
-                }else {
-                    Toast.makeText(getApplicationContext(),tokenResponseProducerSignUp.getMessage(),Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), tokenResponseProducerSignUp.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<TokenResponseProducerSignUp> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Something Went Wrong", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -310,7 +310,7 @@ public class ProducerSignupActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             AlertDialog.Builder mBuilder = new AlertDialog.Builder(ProducerSignupActivity.this);
-            View mView = getLayoutInflater().inflate(R.layout.dialog_otp_verification,null);
+            View mView = getLayoutInflater().inflate(R.layout.dialog_otp_verification, null);
             mBuilder.setView(mView);
             otpDialog = mBuilder.create();
 
@@ -341,7 +341,7 @@ public class ProducerSignupActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Please Enter Name", Toast.LENGTH_SHORT).show();
             } else if (!isValidPassword) {
                 password.setError("Please Enter a Valid Password(at least one letter (a-z or A-Z) and one number(0-9)[Length: 6-15]");
-                Toast.makeText(getApplicationContext(),"Please Enter a valid password",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Please Enter a valid password", Toast.LENGTH_SHORT).show();
             } else if (!isValidPhone) {
                 mobileNumber.setError("Please Enter a valid Phone Number");
                 Toast.makeText(getApplicationContext(), "Please Enter a valid Phone Number", Toast.LENGTH_SHORT).show();
@@ -351,11 +351,11 @@ public class ProducerSignupActivity extends AppCompatActivity {
             } else if (!isValidAdhar) {
                 aadhar.setError("Please enter a valid Aadhar Number");
                 Toast.makeText(getApplicationContext(), "Please Enter a valid Aadhar Number", Toast.LENGTH_SHORT).show();
-            }else if (!isValidLabour) {
+            } else if (!isValidLabour) {
                 Toast.makeText(getApplicationContext(), "Please Choose! Are You a mason or labour", Toast.LENGTH_SHORT).show();
-            }else {
-                 getOtp(phone);
-                 otpDialog.show();
+            } else {
+                getOtp(phone);
+                otpDialog.show();
             }
         }
     };
@@ -394,8 +394,8 @@ public class ProducerSignupActivity extends AppCompatActivity {
             otpProgressBar.setVisibility(View.VISIBLE);
             try {
                 String otp = otpView.getText().toString();
-                verifyOtp(phone,otp);
-            }catch (Exception e){
+                verifyOtp(phone, otp);
+            } catch (Exception e) {
                 otpView.setError("must not be empty!");
             }
         }
@@ -404,14 +404,13 @@ public class ProducerSignupActivity extends AppCompatActivity {
     /**
      * Function to get Age From DOB
      *
-     * @param year Year Of Birth
+     * @param year  Year Of Birth
      * @param month Month Of Birth
-     * @param day Day Of Birth
-     *
+     * @param day   Day Of Birth
      * @return Age
      */
 
-    private String getAge(int year, int month, int day){
+    private String getAge(int year, int month, int day) {
         Calendar dob = Calendar.getInstance();
         Calendar today = Calendar.getInstance();
 
@@ -419,7 +418,7 @@ public class ProducerSignupActivity extends AppCompatActivity {
 
         int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
 
-        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)){
+        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
             age--;
         }
 
@@ -434,7 +433,7 @@ public class ProducerSignupActivity extends AppCompatActivity {
      *
      * @param phone User Phone Number
      */
-    private void getOtp(String phone){
+    private void getOtp(String phone) {
         Call<HttpResponse> getOtpCall = otpVerificationService.getOtp(phone);
 
         getOtpCall.enqueue(new Callback<HttpResponse>() {
@@ -443,32 +442,33 @@ public class ProducerSignupActivity extends AppCompatActivity {
                 otpProgressBar.setVisibility(View.GONE);
                 try {
                     HttpResponse httpResponse = response.body();
-                    if(httpResponse.getStatus() == 200){
-                        Toast.makeText(getApplicationContext(),httpResponse.getMessage(),Toast.LENGTH_LONG).show();
-                    }else{
+                    if (httpResponse.getStatus() == 200) {
+                        Toast.makeText(getApplicationContext(), httpResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    } else {
                         otpDialog.hide();
-                        Toast.makeText(getApplicationContext(),httpResponse.getMessage(),Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), httpResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                }catch (NullPointerException e){
-                    Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
+                } catch (NullPointerException e) {
+                    Toast.makeText(getApplicationContext(), "Something Went Wrong", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<HttpResponse> call, Throwable t) {
                 otpProgressBar.setVisibility(View.GONE);
-                Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Something Went Wrong", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     /**
      * Function to get
+     *
      * @param phone
      * @param otp
      */
-    private void verifyOtp(String phone, String otp){
-        Call<HttpResponse> verifyOtpCall = otpVerificationService.verifyOtp(phone,otp);
+    private void verifyOtp(String phone, String otp) {
+        Call<HttpResponse> verifyOtpCall = otpVerificationService.verifyOtp(phone, otp);
 
         verifyOtpCall.enqueue(new Callback<HttpResponse>() {
             @Override
@@ -476,8 +476,8 @@ public class ProducerSignupActivity extends AppCompatActivity {
                 otpProgressBar.setVisibility(View.GONE);
                 try {
                     HttpResponse httpResponse = response.body();
-                    Toast.makeText(getApplicationContext(),httpResponse.getMessage(),Toast.LENGTH_LONG).show();
-                    if (httpResponse.getStatus() == 200){
+                    Toast.makeText(getApplicationContext(), httpResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    if (httpResponse.getStatus() == 200) {
                         otpDialog.hide();
                         String fullname = fullName.getText().toString().trim();
                         String pass = password.getText().toString().trim();
@@ -490,19 +490,19 @@ public class ProducerSignupActivity extends AppCompatActivity {
                             String cityId = "" + cities.get(spinnerCity.getSelectedIndex() - 1).getId();
                             String localityId = "" + localities.get(spinnerLocality.getSelectedIndex() - 1).getId();
                             producerSignUp(fullname, pass, phone, stateId, cityId, localityId, dateOfBirth, adhar, islabour);
-                        }catch (ArrayIndexOutOfBoundsException e){
+                        } catch (ArrayIndexOutOfBoundsException e) {
                             Toast.makeText(getApplicationContext(), "Please Choose City and Locality", Toast.LENGTH_SHORT).show();
                         }
                     }
-                }catch (Exception e){
-                    Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "Something Went Wrong", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<HttpResponse> call, Throwable t) {
                 otpProgressBar.setVisibility(View.GONE);
-                Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Something Went Wrong", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -3,6 +3,7 @@ package com.alabhya.Shaktiman.ProducerMainView;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.cardview.widget.CardView;
@@ -46,11 +47,14 @@ public class ProducerHomeFragment extends Fragment {
     private Button viewDetails;
     private ProgressBar progressBar;
     private TextView Active;
+    private Context context;
+    private OrderDataProducer orderData;
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        this.context = context;
         orderManagementService = ApiClient.getRetrofitClient().create(OrderManagementService.class);
-        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("LoginCredentials",0);
+        SharedPreferences sharedPreferences = context.getSharedPreferences("LoginCredentials",0);
         getOrders(sharedPreferences.getString("userId",""));
     }
 
@@ -66,13 +70,15 @@ public class ProducerHomeFragment extends Fragment {
         workDate = view.findViewById(R.id.producer_workDate);
         locality = view.findViewById(R.id.producer_locality);
         producers = view.findViewById(R.id.producer_producerQuant);
-        cardView = view.findViewById(R.id.cardView6);
+        cardView = view.findViewById(R.id.producer_fragment_home_cardView);
         progressBar =view.findViewById(R.id.producer_home_progressBar);
         Active = view.findViewById(R.id.isActiveProducerOrder);
 
         progressBar.setVisibility(View.VISIBLE);
 
         viewDetails = view.findViewById(R.id.producer_viewDetailsButton);
+
+        viewDetails.setEnabled(false);
 
         viewDetails.setOnClickListener(viewDetailsListener);
 
@@ -90,12 +96,21 @@ public class ProducerHomeFragment extends Fragment {
                 Log.d("Single",orderDetailsProducer.getStatus().toString());
                 orderDataProducers = orderDetailsProducer.getData();
 
+                viewDetails.setEnabled(true);
+
 
                 SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
                 SimpleDateFormat output = new SimpleDateFormat("dd MMM yyyy");
 
                 try {
-                    Date date = input.parse(orderDataProducers.get(orderDataProducers.size()-1).getAddedAt());
+
+                    for (int i=orderDataProducers.size()-1;i>=0;i--) {
+                        if (!orderDataProducers.get(i).getAccepted().equals("2")) {
+                            orderData = orderDataProducers.get(i);
+                            break;
+                        }
+                    }
+                    Date date = input.parse(orderData.getAddedAt());
                     String formatted = output.format(date);
                     orderDate.setText(formatted);
                 } catch (Exception e) {
@@ -110,18 +125,20 @@ public class ProducerHomeFragment extends Fragment {
 
 
                 try {
-                    int isActive = Integer.parseInt(orderDataProducers.get(orderDataProducers.size()-1).getIsActive());
-                    int isAccepted = Integer.parseInt(orderDataProducers.get(orderDataProducers.size()-1).getAccepted());
+                    int isActive = Integer.parseInt(orderData.getIsActive());
+                    int isAccepted = Integer.parseInt(orderData.getAccepted());
 
                     if (isActive == 1 && isAccepted==1){
                         producers.setText("Accepted");
+                        cardView.setCardBackgroundColor(Color.parseColor("#81c784"));
                     }else producers.setText("To Accept");
-                    orderId.setText(orderDataProducers.get(orderDataProducers.size()-1).getId());
-                    workDate.setText(orderDataProducers.get(orderDataProducers.size()-1).getWorkDate());
-                    contact.setText(orderDataProducers.get(orderDataProducers.size()-1).getContactPhone());
-                    locality.setText(orderDataProducers.get(orderDataProducers.size()-1).getLocalityName());
+                    orderId.setText(String.format("Order Id: %s", orderData.getId()));
+                    workDate.setText(String.format("Work Date: %s", orderData.getWorkDate()));
+                    contact.setText(String.format("Contact No: %s", orderData.getContactPhone()));
+                    locality.setText(String.format("Locality: %s", orderData.getLocalityName()));
+
                 }catch (Exception e){
-                    Toast.makeText(getActivity(),"No Orders Found",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"No Orders Found!",Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -132,28 +149,32 @@ public class ProducerHomeFragment extends Fragment {
         });
     }
 
-    View.OnClickListener viewDetailsListener = new View.OnClickListener() {
+    private View.OnClickListener viewDetailsListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            OrderDataProducer orderDataProducer = orderDataProducers.get(orderDataProducers.size()-1);
-            Intent intent = new Intent(getActivity(),ProducerOrderFullDetailsActivity.class);
-            intent.putExtra("state",orderDataProducer.getStateName());
-            intent.putExtra("city",orderDataProducer.getCityName());
-            intent.putExtra("id",orderDataProducer.getId());
-            intent.putExtra("consumer",orderDataProducer.getConsumer());
-            intent.putExtra("locality",orderDataProducer.getLocalityName());
-            intent.putExtra("isActive",orderDataProducer.getIsActive());
-            intent.putExtra("flat",orderDataProducer.getFlat());
-            intent.putExtra("area",orderDataProducer.getArea());
-            intent.putExtra("landmark",orderDataProducer.getLandmark());
-            intent.putExtra("addedAt",orderDataProducer.getAddedAt());
-            intent.putExtra("WorkDate",orderDataProducer.getWorkDate());
-            intent.putExtra("producers",orderDataProducer.getProducersQuantity());
-            intent.putExtra("confirmed",orderDataProducer.getConfirmedProducers());
-            intent.putExtra("WorkDesc",orderDataProducer.getWorkDescription());
-            intent.putExtra("phoneNumber",orderDataProducer.getContactPhone());
-            intent.putExtra("accepted",orderDataProducer.getAccepted());
-            getActivity().startActivity(intent);
+
+
+
+            Intent intent = new Intent(context,ProducerOrderFullDetailsActivity.class);
+            intent.putExtra("state",orderData.getStateName());
+            intent.putExtra("city",orderData.getCityName());
+            intent.putExtra("id",orderData.getId());
+            intent.putExtra("consumer",orderData.getConsumer());
+            intent.putExtra("locality",orderData.getLocalityName());
+            intent.putExtra("isActive",orderData.getIsActive());
+            intent.putExtra("flat",orderData.getFlat());
+            intent.putExtra("area",orderData.getArea());
+            intent.putExtra("landmark",orderData.getLandmark());
+            intent.putExtra("addedAt",orderData.getAddedAt());
+            intent.putExtra("WorkDate",orderData.getWorkDate());
+            intent.putExtra("producers",orderData.getProducersQuantity());
+            intent.putExtra("confirmed",orderData.getConfirmedProducers());
+            intent.putExtra("WorkDesc",orderData.getWorkDescription());
+            intent.putExtra("phoneNumber",orderData.getContactPhone());
+            intent.putExtra("accepted",orderData.getAccepted());
+            context.startActivity(intent);
+
+
         }
     };
 }

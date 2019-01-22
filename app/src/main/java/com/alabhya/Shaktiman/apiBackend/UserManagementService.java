@@ -81,4 +81,12 @@ public interface UserManagementService {
                 @Field("password") String password
             );
 
+    @FormUrlEncoded
+    @Headers({"Authorization:674532","User-Agent:shaktiM@nApp","Content-Type:application/x-www-form-urlencoded"})
+    @POST("updatePasswordProducer.php")
+    Call<HttpResponse> updatePasswordProducer
+            (   @Field("phone") String phone,
+                @Field("password") String password
+            );
+
 }

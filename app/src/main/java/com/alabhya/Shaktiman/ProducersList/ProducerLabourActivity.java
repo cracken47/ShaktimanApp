@@ -12,14 +12,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.alabhya.Shaktiman.Adapters.ProducerLabourAdapter;
 import com.alabhya.Shaktiman.R;
 import com.alabhya.Shaktiman.apiBackend.ApiClient;
 import com.alabhya.Shaktiman.apiBackend.ProducerManagementService;
 import com.alabhya.Shaktiman.apiBackend.UserManagementService;
+import com.alabhya.Shaktiman.models.Location;
 import com.alabhya.Shaktiman.models.Producer;
 
 import java.util.Calendar;
@@ -37,21 +40,29 @@ public class ProducerLabourActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private static final String DEFAULT = "00000000000000";
     private ProducerManagementService producerManagementService;
+    private int labourQuantity;
+    private int masonQuantity;
+    private SharedPreferences sharedPreferences;
+    private UserManagementService userManagementService;
+    private List<Location> localities;
+    private List<Location> cities;
+    private Button continueLabour;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_producer_labour);
-        int labourQuantity = getIntent().getIntExtra("labourQuantity", 0);
-        int masonQuantity = getIntent().getIntExtra("masonQuantity", 0);
+        labourQuantity = getIntent().getIntExtra("labourQuantity", 0);
+        masonQuantity = getIntent().getIntExtra("masonQuantity", 0);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("ProducerQuantity",Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("ProducerQuantity",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         editor.putInt("labourQuantity", labourQuantity);
         editor.putInt("masonQuantity", masonQuantity);
         editor.apply();
 
+        userManagementService = ApiClient.getRetrofitClient().create(UserManagementService.class);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -80,7 +91,8 @@ public class ProducerLabourActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.producer_labour_progressBar);
         progressBar.setVisibility(View.VISIBLE);
 
-        Button continueLabour = findViewById(R.id.continueLabour);
+        continueLabour = findViewById(R.id.continueLabour);
+        continueLabour.setEnabled(false);
         continueLabour.setOnClickListener(continueLabourButtonListener);
 
         SharedPreferences sharedPreferences1 = getSharedPreferences("ConsumerLocationInfo",0);
@@ -89,6 +101,7 @@ public class ProducerLabourActivity extends AppCompatActivity {
         String city = sharedPreferences1.getString("cityId",DEFAULT);
         String locality = sharedPreferences1.getString("localityId",DEFAULT);
 
+        Log.d("Single","Ids"+state+city+locality);
         getLabour(state,city,locality);
     }
 
@@ -100,11 +113,20 @@ public class ProducerLabourActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Producer>>() {
             @Override
             public void onResponse(Call<List<Producer>> call, Response<List<Producer>> response) {
-                progressBar.setVisibility(View.GONE);
                 producers = response.body();
-                producerLabourAdapter = new ProducerLabourAdapter(producers,getApplicationContext());
-                Log.d("Single",""+producers);
-                recyclerView.setAdapter(producerLabourAdapter);
+                if (producers.size()==0 && masonQuantity!=0){
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("isEmpty",true);
+                    editor.apply();
+                    continueLabour.setEnabled(true);
+                }
+                if (producers.size()!=0){
+                    continueLabour.setEnabled(true);
+                    getLocalities();
+                }else {
+                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(ProducerLabourActivity.this, "Sorry! No Labours found for current location!", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -114,31 +136,63 @@ public class ProducerLabourActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * A function to get available Localities from the database for spinners data.
+     *
+     * @throws ArrayIndexOutOfBoundsException While getting localityId
+     */
+
+    private void getLocalities() {
+        final Call<List<Location>> locality = userManagementService.getLocalities();
+        locality.enqueue(new Callback<List<Location>>() {
+            @Override
+            public void onResponse(Call<List<Location>> call, Response<List<Location>> response) {
+                localities = response.body();
+                getCities();
+            }
+
+            @Override
+            public void onFailure(Call<List<Location>> call, Throwable t) {
+                call.clone().enqueue(this);
+            }
+        });
+    }
+
+    private void getCities() {
+        final Call<List<Location>> city = userManagementService.getCities();
+        city.enqueue(new Callback<List<Location>>() {
+            @Override
+            public void onResponse(Call<List<Location>> call, Response<List<Location>> response) {
+                progressBar.setVisibility(View.GONE);
+                cities = response.body();
+                producerLabourAdapter = new ProducerLabourAdapter(producers,localities,cities,getApplicationContext());
+                Log.d("Single","locale size"+localities.size());
+                recyclerView.setAdapter(producerLabourAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<Location>> call, Throwable t) {
+                call.clone().enqueue(this);
+            }
+        });
+    }
+
     View.OnClickListener continueLabourButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            boolean isAllSelected = sharedPreferences.getBoolean("isAllSelected",false);
+
+            Log.d("Single",""+isAllSelected);
+
+            if (!isAllSelected && !(labourQuantity==0) && producers.size()!=0){
+                Toast.makeText(ProducerLabourActivity.this, "Please Choose Labours", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Intent intent = new Intent(getApplicationContext(),ProducerMasonActivity.class);
             startActivity(intent);
         }
     };
 
-    private String getAge(int year, int month, int day){
-        Calendar dob = Calendar.getInstance();
-        Calendar today = Calendar.getInstance();
-
-        dob.set(year, month, day);
-
-        int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
-
-        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)){
-            age--;
-        }
-
-        Integer ageInt = new Integer(age);
-        String ageS = ageInt.toString();
-
-        return ageS;
-    }
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -150,9 +204,14 @@ public class ProducerLabourActivity extends AppCompatActivity {
         }
     };
 
+
     @Override
     protected void onDestroy() {
         unregisterReceiver(broadcastReceiver);
+        Log.d("Single","On destroy called baby");
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("isAllSelected",false);
+        editor.apply();
         super.onDestroy();
     }
 }

@@ -35,7 +35,6 @@ public class ChooseLocation extends AppCompatActivity {
     private List<String> cityName = new ArrayList<>();
     private List<String> LocalitiesName = new ArrayList<>();
     private List<String> StateName = new ArrayList<>();
-    private static final String DEFAULT = "Default";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +67,7 @@ public class ChooseLocation extends AppCompatActivity {
         Button confirmLocation = findViewById(R.id.confirm_location_button);
         confirmLocation.setOnClickListener(confirmButtonListener);
 
-        TextView defaultButton = findViewById(R.id.choose_default_location);
-        defaultButton.setOnClickListener(defaultButtonListener);
+
     }
 
     private void getCities() {
@@ -130,31 +128,16 @@ public class ChooseLocation extends AppCompatActivity {
             SharedPreferences sharedPreferences = getSharedPreferences("ConsumerLocationInfo", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             try {
-                editor.putString("stateId","1");
-                editor.putString("cityId",""+cities.get(spinnerCity.getSelectedIndex()-1).getId());
-                editor.putString("localityId",""+localities.get(spinnerLocality.getSelectedIndex()-1).getId());
-                editor.putString("city",cities.get(spinnerCity.getSelectedIndex()-1).getName());
-                editor.putString("locality",localities.get(spinnerLocality.getSelectedIndex()-1).getName());
+                editor.putString("stateId", "1");
+                editor.putString("cityId", "" + cities.get(spinnerCity.getSelectedIndex() - 1).getId());
+                editor.putString("localityId", "" + localities.get(spinnerLocality.getSelectedIndex() - 1).getId());
+                editor.putString("city", cities.get(spinnerCity.getSelectedIndex() - 1).getName());
+                editor.putString("locality", localities.get(spinnerLocality.getSelectedIndex() - 1).getName());
                 editor.apply();
                 finish();
-            }catch (Exception e){
-                Toast.makeText(getApplicationContext(),"Please choose your Location",Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), "Please choose your Location", Toast.LENGTH_SHORT).show();
             }
-        }
-    };
-
-    View.OnClickListener defaultButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            SharedPreferences sharedPreferences = getSharedPreferences("ConsumerLocationInfo", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("stateId","0");
-            editor.putString("cityId","0");
-            editor.putString("localityId","0");
-            editor.putString("city",DEFAULT);
-            editor.putString("locality",DEFAULT);
-            editor.apply();
-            finish();
         }
     };
 }

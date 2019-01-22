@@ -57,4 +57,11 @@ public interface OrderManagementService {
                 @Field("orderId") String orderId,
                 @Field("date") String date
             );
+
+    @FormUrlEncoded
+    @Headers({"Authorization:674532","User-Agent:shaktiM@nApp","Content-Type:application/x-www-form-urlencoded"})
+    @POST("updateAvailabilty.php")
+    Call<HttpResponse> setAvailabilty
+            (   @Field("userId") String userId
+            );
 }

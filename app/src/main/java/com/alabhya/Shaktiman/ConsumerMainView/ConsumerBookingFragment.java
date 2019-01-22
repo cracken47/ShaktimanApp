@@ -68,7 +68,7 @@ public class ConsumerBookingFragment extends Fragment {
                         Toast.makeText(context,"No Orders Found", Toast.LENGTH_SHORT).show();
                     }
                 }catch (Exception e){
-                    Toast.makeText(context,"Something went Wron!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context,"Something went Wrong!",Toast.LENGTH_SHORT).show();
                 }
 
                 adapter = new ConsumerOrderDetailsAdapter(orderDetailsConsumer,context);

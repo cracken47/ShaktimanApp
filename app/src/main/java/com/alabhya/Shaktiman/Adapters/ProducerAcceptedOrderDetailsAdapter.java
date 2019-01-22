@@ -14,16 +14,13 @@ import android.widget.TextView;
 import com.alabhya.Shaktiman.OrderDetails.ProducerOrderFullDetailsActivity;
 import com.alabhya.Shaktiman.R;
 import com.alabhya.Shaktiman.models.OrderDetailsProducer.OrderDataProducer;
-import com.alabhya.Shaktiman.models.OrderDetailsProducer.OrderDetailsProducer;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class ProducerOrderDetailsAdapter extends RecyclerView.Adapter<ProducerOrderDetailsAdapter.MyViewHolder> {
-    private OrderDetailsProducer dataSet;
-    private int mLastClicked = 0;
+public class ProducerAcceptedOrderDetailsAdapter extends RecyclerView.Adapter<ProducerAcceptedOrderDetailsAdapter.MyViewHolder> {
     List<OrderDataProducer> orderDataProducers;
     Context ctx;
 
@@ -54,7 +51,7 @@ public class ProducerOrderDetailsAdapter extends RecyclerView.Adapter<ProducerOr
             orderDate = itemView.findViewById(R.id.producer_order_list_orderDate);
             locality = itemView.findViewById(R.id.producer_order_list_locality);
             contact = itemView.findViewById(R.id.producer_order_list_contact);
-            cardView = itemView.findViewById(R.id.cardView6);
+            cardView = itemView.findViewById(R.id.producer_fragment_home_cardView);
         }
 
         @Override
@@ -89,8 +86,8 @@ public class ProducerOrderDetailsAdapter extends RecyclerView.Adapter<ProducerOr
         }
     }
 
-    public ProducerOrderDetailsAdapter(OrderDetailsProducer data,Context ctx) {
-        this.dataSet = data;
+    public ProducerAcceptedOrderDetailsAdapter(List<OrderDataProducer> orderDataProducers, Context ctx) {
+        this.orderDataProducers = orderDataProducers;
         this.ctx = ctx;
     }
 
@@ -100,16 +97,12 @@ public class ProducerOrderDetailsAdapter extends RecyclerView.Adapter<ProducerOr
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.producer_order_list, parent, false);
 
-        orderDataProducers = dataSet.getData();
-
         MyViewHolder myViewHolder = new MyViewHolder(view,ctx,orderDataProducers);
         return myViewHolder;
     }
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int listPosition) {
-
-        orderDataProducers = dataSet.getData();
 
         SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
         SimpleDateFormat output = new SimpleDateFormat("dd MMM yyyy");
@@ -147,6 +140,7 @@ public class ProducerOrderDetailsAdapter extends RecyclerView.Adapter<ProducerOr
 
     @Override
     public int getItemCount() {
-        return dataSet.getData().size();
+
+        return  orderDataProducers.size();
     }
 }

@@ -14,7 +14,7 @@ public class Producer {
     @SerializedName("cityId")
     @Expose
     private String cityId;
-    @SerializedName("localtyId")
+    @SerializedName("localityId")
     @Expose
     private String localtyId;
     @SerializedName("isLabour")

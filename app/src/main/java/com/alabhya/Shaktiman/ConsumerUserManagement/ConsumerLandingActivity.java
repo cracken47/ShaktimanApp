@@ -172,9 +172,8 @@ public class ConsumerLandingActivity extends Activity {
             if(!new Validator().isValidPhone(phone)){
                 Toast.makeText(getApplicationContext(),"Please Enter valid Mobile Number",Toast.LENGTH_SHORT).show();
                 mobileNumber.setError("Please Enter valid Mobile Number");
-            }else if(!new Validator().isValidPassword(passKey)){
-                password.setError("Please Enter a Valid Password(at least one letter (a-z or A-Z) and one number(0-9)[Length: 6-15]");
-                Toast.makeText(getApplicationContext(),"Please Enter a valid password",Toast.LENGTH_SHORT).show();
+            }else if(!new Validator().validInput(passKey)){
+                password.setError("Password must not be empty!");
             }else {
                 Log.d("Single",phone+" "+passKey);
                 try {

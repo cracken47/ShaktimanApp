@@ -38,7 +38,7 @@ public class ConsumerHomeActivity extends AppCompatActivity {
 
         registerReceiver(broadcastReceiver, new IntentFilter("finish_consumer_home_activity"));
 
-        SharedPreferences sharedPreferences = getSharedPreferences("Logincredential",Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("LoginCredentials",Context.MODE_PRIVATE);
         UserManagementService userManagementService = ApiClient.getRetrofitClient().create(UserManagementService.class);
 
         Call<TokenResponseConsumerSignIn> signInCall = userManagementService.signInConsumer(

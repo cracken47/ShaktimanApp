@@ -16,14 +16,19 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 
+import com.alabhya.Shaktiman.Adapters.ProducerLabourAdapter;
 import com.alabhya.Shaktiman.Adapters.ProducerMasonAdapter;
+import com.alabhya.Shaktiman.ConsumerMainView.ConsumerHomeActivity;
 import com.alabhya.Shaktiman.PlaceOrders.OrderPlaceActivity;
+import com.alabhya.Shaktiman.ProducerMainView.ProducerHomeActivity;
 import com.alabhya.Shaktiman.R;
 import com.alabhya.Shaktiman.apiBackend.ApiClient;
 import com.alabhya.Shaktiman.apiBackend.ProducerManagementService;
 import com.alabhya.Shaktiman.apiBackend.UserManagementService;
+import com.alabhya.Shaktiman.models.Location;
 import com.alabhya.Shaktiman.models.Producer;
 
 import java.util.List;
@@ -41,6 +46,11 @@ public class ProducerMasonActivity extends AppCompatActivity {
     private ProducerManagementService producerManagementService;
     private static final String DEFAULT = "00000000000000";
     private ProgressBar progressBar;
+    private int masonQuantity;
+    private Button continueProducer;
+    private UserManagementService userManagementService;
+    List<Location> cities;
+    List<Location> localities;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +65,8 @@ public class ProducerMasonActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        Button continueProducer = findViewById(R.id.continueProducer);
+        continueProducer = findViewById(R.id.continueProducer);
+        continueProducer.setEnabled(false);
         continueProducer.setOnClickListener(continueButtonListener);
         toolbar.setNavigationIcon(R.drawable.ic_sort_black_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -67,6 +78,7 @@ public class ProducerMasonActivity extends AppCompatActivity {
 
         toolbar.setTitle("Masons List");
 
+        userManagementService = ApiClient.getRetrofitClient().create(UserManagementService.class);
         recyclerView = findViewById(R.id.producerView);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -96,11 +108,15 @@ public class ProducerMasonActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Producer>>() {
             @Override
             public void onResponse(Call<List<Producer>> call, Response<List<Producer>> response) {
-                progressBar.setVisibility(View.GONE);
                 producers = response.body();
-                producerMasonAdapter = new ProducerMasonAdapter(producers,getApplicationContext());
-                Log.d("Single",""+producers);
-                recyclerView.setAdapter(producerMasonAdapter);
+                continueProducer.setEnabled(true);
+
+                if (producers.size()!=0){
+                    getLocalities();
+                }else {
+                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(ProducerMasonActivity.this, "Sorry! No masons found for current location!", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -111,11 +127,73 @@ public class ProducerMasonActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * A function to get available Localities from the database for spinners data.
+     *
+     * @throws ArrayIndexOutOfBoundsException While getting localityId
+     */
+
+    private void getLocalities() {
+        final Call<List<Location>> locality = userManagementService.getLocalities();
+        locality.enqueue(new Callback<List<Location>>() {
+            @Override
+            public void onResponse(Call<List<Location>> call, Response<List<Location>> response) {
+                localities = response.body();
+                getCities();
+            }
+
+            @Override
+            public void onFailure(Call<List<Location>> call, Throwable t) {
+                call.clone().enqueue(this);
+            }
+        });
+    }
+
+    private void getCities() {
+        final Call<List<Location>> city = userManagementService.getCities();
+        city.enqueue(new Callback<List<Location>>() {
+            @Override
+            public void onResponse(Call<List<Location>> call, Response<List<Location>> response) {
+                progressBar.setVisibility(View.GONE);
+                cities = response.body();
+                producerMasonAdapter = new ProducerMasonAdapter(producers,localities,cities,getApplicationContext());
+                Log.d("Single","locale size"+localities.size());
+                recyclerView.setAdapter(producerMasonAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<Location>> call, Throwable t) {
+                call.clone().enqueue(this);
+            }
+        });
+    }
+
 
     View.OnClickListener continueButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            startActivity(new Intent(getApplicationContext(),OrderPlaceActivity.class));
+            SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("ProducerQuantity",0);
+
+
+            boolean isEmpty = sharedPreferences.getBoolean("isEmpty",true);
+
+            if (isEmpty && producers.size()==0){
+                Toast.makeText(ProducerMasonActivity.this, "Sorry! No Producers Found for your location!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getApplicationContext(), ConsumerHomeActivity.class));
+                Intent intent = new Intent("finish_labour_list_activity");
+                Intent intent1 = new Intent("finish_consumer_home_activity");
+                sendBroadcast(intent);
+                sendBroadcast(intent1);
+                finish();
+            }else {
+                masonQuantity = sharedPreferences.getInt("masonQuantity",100000);
+                boolean isAllMasonSelected = sharedPreferences.getBoolean("isAllMasonSelected",false);
+                if (!isAllMasonSelected && !(masonQuantity==0)){
+                    Toast.makeText(ProducerMasonActivity.this, "Please Choose Masons", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                startActivity(new Intent(getApplicationContext(),OrderPlaceActivity.class));
+            }
         }
     };
 
@@ -132,6 +210,10 @@ public class ProducerMasonActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         unregisterReceiver(broadcastReceiver);
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("ProducerQuantity",0);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("isAllMasonSelected",false);
+        editor.apply();
         super.onDestroy();
     }
 }

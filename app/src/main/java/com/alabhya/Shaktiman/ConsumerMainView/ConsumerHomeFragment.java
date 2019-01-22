@@ -36,6 +36,7 @@ public class ConsumerHomeFragment extends Fragment {
     private NiceSpinner chooselabour,choosemason;
     private Context context;
     private SharedPreferences sharedPreferences;
+    private Button proceed;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -58,7 +59,7 @@ public class ConsumerHomeFragment extends Fragment {
         Log.d("Single",cityName+localityName);
         try {
             if (cityName.equals(DEFAULT) || localityName.equals(DEFAULT)){
-                Location = "All Location";
+                Location = "No location selected";
                 location.setText(Location);
             }else {
                 Location = localityName+", "+cityName;
@@ -75,7 +76,7 @@ public class ConsumerHomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_consumer_home, container, false);
 
-        Button proceed = view.findViewById(R.id.proceed);
+        proceed = view.findViewById(R.id.proceed);
         chooselabour = view.findViewById(R.id.chooseLabour);
         choosemason = view.findViewById(R.id.chooseMason);
         location = view.findViewById(R.id.location_textView);
@@ -113,6 +114,20 @@ public class ConsumerHomeFragment extends Fragment {
     private View.OnClickListener proceedButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            String cityName = sharedPreferences.getString("city",DEFAULT);
+            String localityName = sharedPreferences.getString("locality",DEFAULT);
+            Log.d("Single",cityName+localityName);
+            try {
+                if (cityName.equals(DEFAULT) || localityName.equals(DEFAULT)){
+                    Toast.makeText(context, "Please Choose Location First!", Toast.LENGTH_SHORT).show();
+                    return;
+                }else if (chooselabour.getSelectedIndex()==0 && choosemason.getSelectedIndex()==0){
+                    Toast.makeText(context, "Please Choose quantity of mason and labour!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }catch (NullPointerException e){
+                Log.d("Single",""+e);
+            }
             Log.d("Single","");
             Intent intent = new Intent(getContext(),ProducerLabourActivity.class);
             intent.putExtra("labourQuantity",chooselabour.getSelectedIndex());
@@ -120,4 +135,5 @@ public class ConsumerHomeFragment extends Fragment {
             startActivity(intent);
         }
     };
+
 }

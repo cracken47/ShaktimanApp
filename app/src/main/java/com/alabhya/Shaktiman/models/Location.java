@@ -6,10 +6,10 @@ public class Location {
 
     @SerializedName("id")
     @Expose
-    private int id;
+    private String  id;
     @SerializedName("stateId")
     @Expose
-    private int stateId;
+    private String  stateId;
     @SerializedName("name")
     @Expose
     private String name;
@@ -20,19 +20,19 @@ public class Location {
     @Expose
     private String addedAT;
 
-    public int getId() {
+    public String  getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String  id) {
         this.id = id;
     }
 
-    public int getStateId() {
+    public String getStateId() {
         return stateId;
     }
 
-    public void setStateId(int stateId) {
+    public void setStateId(String  stateId) {
         this.stateId = stateId;
     }
 
