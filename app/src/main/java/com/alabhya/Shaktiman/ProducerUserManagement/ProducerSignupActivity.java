@@ -332,8 +332,6 @@ public class ProducerSignupActivity extends AppCompatActivity {
             boolean isValidPhone = new Validator().isValidPhone(phone);
             String dateOfBirth = dob.getText().toString().trim();
             boolean isValidDob = new Validator().validInput(dateOfBirth);
-            String adhar = aadhar.getText().toString().trim();
-            boolean isValidAdhar = new Validator().isvalidAadhar(adhar);
             boolean isValidLabour = new Validator().validInput(islabour);
 
             if (!isvalidName) {
@@ -348,9 +346,6 @@ public class ProducerSignupActivity extends AppCompatActivity {
             } else if (!isValidDob) {
                 dob.setError("Please Enter your Date of Birth");
                 Toast.makeText(getApplicationContext(), "Please Enter your Date of Birth", Toast.LENGTH_SHORT).show();
-            } else if (!isValidAdhar) {
-                aadhar.setError("Please enter a valid Aadhar Number");
-                Toast.makeText(getApplicationContext(), "Please Enter a valid Aadhar Number", Toast.LENGTH_SHORT).show();
             } else if (!isValidLabour) {
                 Toast.makeText(getApplicationContext(), "Please Choose! Are You a mason or labour", Toast.LENGTH_SHORT).show();
             } else {

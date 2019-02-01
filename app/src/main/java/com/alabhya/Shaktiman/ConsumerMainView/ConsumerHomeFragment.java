@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.alabhya.Shaktiman.ChooseLocation;
 import com.alabhya.Shaktiman.ProducersList.ProducerLabourActivity;
+import com.alabhya.Shaktiman.ProducersList.ProducerMasonActivity;
 import com.alabhya.Shaktiman.R;
 
 import org.angmarch.views.NiceSpinner;
@@ -129,10 +130,18 @@ public class ConsumerHomeFragment extends Fragment {
                 Log.d("Single",""+e);
             }
             Log.d("Single","");
-            Intent intent = new Intent(getContext(),ProducerLabourActivity.class);
-            intent.putExtra("labourQuantity",chooselabour.getSelectedIndex());
-            intent.putExtra("masonQuantity",choosemason.getSelectedIndex());
-            startActivity(intent);
+
+            if (chooselabour.getSelectedIndex()==0){
+                Intent intent = new Intent(getContext(), ProducerMasonActivity.class);
+                intent.putExtra("labourQuantity",chooselabour.getSelectedIndex());
+                intent.putExtra("masonQuantity",choosemason.getSelectedIndex());
+                startActivity(intent);
+            }else {
+                Intent intent = new Intent(getContext(),ProducerLabourActivity.class);
+                intent.putExtra("labourQuantity",chooselabour.getSelectedIndex());
+                intent.putExtra("masonQuantity",choosemason.getSelectedIndex());
+                startActivity(intent);
+            }
         }
     };
 

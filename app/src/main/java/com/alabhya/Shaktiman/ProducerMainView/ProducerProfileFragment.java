@@ -123,8 +123,10 @@ public class ProducerProfileFragment extends Fragment {
                     setAvailabiltyCall.enqueue(new Callback<HttpResponse>() {
                         @Override
                         public void onResponse(Call<HttpResponse> call, Response<HttpResponse> response) {
+                            availabilitySwitch.setVisibility(View.GONE);
+                            availabilityTextView.setText("Available");
+                            availabilityTextView.setTextColor(Color.parseColor("#4caf50"));
                         }
-
                         @Override
                         public void onFailure(Call<HttpResponse> call, Throwable t) {
 

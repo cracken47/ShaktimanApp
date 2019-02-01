@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.alabhya.Shaktiman.Adapters.ProducerLabourAdapter;
+import com.alabhya.Shaktiman.PlaceOrders.OrderPlaceActivity;
 import com.alabhya.Shaktiman.R;
 import com.alabhya.Shaktiman.apiBackend.ApiClient;
 import com.alabhya.Shaktiman.apiBackend.ProducerManagementService;
@@ -188,8 +189,13 @@ public class ProducerLabourActivity extends AppCompatActivity {
                 Toast.makeText(ProducerLabourActivity.this, "Please Choose Labours", Toast.LENGTH_SHORT).show();
                 return;
             }
-            Intent intent = new Intent(getApplicationContext(),ProducerMasonActivity.class);
-            startActivity(intent);
+            if(masonQuantity == 0){
+                Intent intent = new Intent(getApplicationContext(), OrderPlaceActivity.class);
+                startActivity(intent);
+            }else{
+                Intent intent = new Intent(getApplicationContext(),ProducerMasonActivity.class);
+                startActivity(intent);
+            }
         }
     };
 
@@ -211,6 +217,7 @@ public class ProducerLabourActivity extends AppCompatActivity {
         Log.d("Single","On destroy called baby");
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean("isAllSelected",false);
+        editor.clear();
         editor.apply();
         super.onDestroy();
     }

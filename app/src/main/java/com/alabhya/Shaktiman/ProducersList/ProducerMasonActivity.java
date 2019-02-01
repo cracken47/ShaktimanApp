@@ -89,8 +89,18 @@ public class ProducerMasonActivity extends AppCompatActivity {
 
         registerReceiver(broadcastReceiver, new IntentFilter("finish_mason_list_activity"));
 
-        SharedPreferences sharedPreferences1 = getSharedPreferences("ConsumerLocationInfo",0);
+        SharedPreferences sharedPreferences = getSharedPreferences("ProducerQuantity",Context.MODE_PRIVATE);
+        int labourQuantity = sharedPreferences.getInt("labourQuantity",0);
 
+        if (labourQuantity == 0){
+            masonQuantity = getIntent().getIntExtra("masonQuantity", 0);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt("masonQuantity", masonQuantity);
+            editor.apply();
+        }
+
+
+        SharedPreferences sharedPreferences1 = getSharedPreferences("ConsumerLocationInfo",0);
         String state = sharedPreferences1.getString("stateId",DEFAULT);
         String city = sharedPreferences1.getString("cityId",DEFAULT);
         String locality = sharedPreferences1.getString("localityId",DEFAULT);
@@ -213,6 +223,7 @@ public class ProducerMasonActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("ProducerQuantity",0);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean("isAllMasonSelected",false);
+        editor.clear();
         editor.apply();
         super.onDestroy();
     }

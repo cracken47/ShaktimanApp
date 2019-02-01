@@ -14,4 +14,5 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_producer_home">ProducerHomeActivity</string>
+    <string name="password_rule">Password must contain atleast one letter(A-Z or a-z) and one number(0-9) and must be of length 6</string>
 </resources>

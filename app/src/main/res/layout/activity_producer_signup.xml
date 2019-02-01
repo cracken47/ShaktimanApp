@@ -12,14 +12,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".ProducerUserManagement.ProducerSignupActivity">
@@ -62,18 +59,18 @@
                 android:id="@+id/mobileNumber"
                 android:layout_width="@dimen/editbox_width_email_password"
                 android:layout_height="@dimen/editbox_height_email_password"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/bg_emailpass"
+                android:drawablePadding="-24dp"
                 android:ems="10"
                 android:gravity="center"
-                android:maxLength="10"
                 android:hint="Mobile Number"
-                android:drawablePadding="-24dp"
-                android:padding="@dimen/_8sdp"
                 android:inputType="phone"
+                android:maxLength="10"
+                android:padding="@dimen/_8sdp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/password" />
+                app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
             <TextView
                 android:id="@+id/dateOfBirth"
@@ -190,6 +187,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/citySpinner" />
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="@dimen/editbox_width_email_password"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/password_rule"
+                android:textSize="@dimen/_8ssp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/password" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
