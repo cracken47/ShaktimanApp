@@ -23,6 +23,7 @@ import com.alabhya.Shaktiman.apiBackend.OtpVerificationService;
 import com.alabhya.Shaktiman.apiBackend.UserManagementService;
 import com.alabhya.Shaktiman.models.ConsumerSignIn.TokenResponseConsumerSignIn;
 import com.alabhya.Shaktiman.models.HttpResponse;
+import com.alabhya.Shaktiman.models.OtpResponse;
 import com.alabhya.Shaktiman.utils.Validator;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -45,9 +46,9 @@ public class ConsumerLandingActivity extends Activity {
     private ProgressBar otpProgressBar;
     private TextInputEditText phoneInputEditText;
     private TextInputEditText otpView;
-    private String otp;
     private TextInputEditText enterPassword;
     private TextInputEditText reEnterPassword;
+    private OtpResponse otpResponse;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.counsumer_landing_activity);
@@ -221,16 +222,17 @@ public class ConsumerLandingActivity extends Activity {
 
             Button verifyOtpButton = mView.findViewById(R.id.verify_otp_button);
             verifyOtpButton.setOnClickListener(verifyOtpListener);
+
+            TextView resendButton = mView.findViewById(R.id.resend_otp);
+            resendButton.setOnClickListener(resendOtpListener);
         }
     };
 
     private View.OnClickListener verifyOtpListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            otpDialog.hide();
-            progressBar.setVisibility(View.VISIBLE);
-            otp = otpView.getText().toString();
-            verifyOtp(phoneForgotPassword,otp);
+            int otp = otpResponse.getOtp();
+            verifyOtp(otp);
         }
     };
 
@@ -246,25 +248,33 @@ public class ConsumerLandingActivity extends Activity {
         }
     };
 
+    View.OnClickListener resendOtpListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            otpProgressBar.setVisibility(View.VISIBLE);
+            getOtp(phoneForgotPassword);
+        }
+    };
+
     /**
      * Function to get OTP
      *
      * @param phone User Phone Number
      */
     private void getOtp(String phone){
-        Call<HttpResponse> getOtpCall = otpVerificationService.getOtp(phone);
+        Call<OtpResponse> getOtpCall = otpVerificationService.getOtp(phone);
 
-        getOtpCall.enqueue(new Callback<HttpResponse>() {
+        getOtpCall.enqueue(new Callback<OtpResponse>() {
             @Override
-            public void onResponse(Call<HttpResponse> call, Response<HttpResponse> response) {
+            public void onResponse(Call<OtpResponse> call, Response<OtpResponse> response) {
                 otpProgressBar.setVisibility(View.GONE);
                 try {
-                    HttpResponse httpResponse = response.body();
-                    if(httpResponse.getStatus() == 200){
-                        Toast.makeText(getApplicationContext(),httpResponse.getMessage(),Toast.LENGTH_LONG).show();
+                    otpResponse = response.body();
+                    if(otpResponse.getStatus() == 200){
+                        Toast.makeText(getApplicationContext(),otpResponse.getMessage(),Toast.LENGTH_LONG).show();
                     }else{
                         otpDialog.hide();
-                        Toast.makeText(getApplicationContext(),httpResponse.getMessage(),Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),otpResponse.getMessage(),Toast.LENGTH_LONG).show();
                     }
                 }catch (NullPointerException e){
                     Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
@@ -272,7 +282,7 @@ public class ConsumerLandingActivity extends Activity {
             }
 
             @Override
-            public void onFailure(Call<HttpResponse> call, Throwable t) {
+            public void onFailure(Call<OtpResponse> call, Throwable t) {
                 otpProgressBar.setVisibility(View.GONE);
                 Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
             }
@@ -280,44 +290,30 @@ public class ConsumerLandingActivity extends Activity {
     }
 
     /**
-     * Function to get
-     * @param phone
+     * Function to verify otp
+     *
      * @param otp
      */
-    private void verifyOtp(final String phone, String otp){
-        Call<HttpResponse> verifyOtpCall = otpVerificationService.verifyOtp(phone,otp);
+    private void verifyOtp(int otp){
+        try {
+            if(Integer.parseInt(otpView.getText().toString())==otp){
+                otpDialog.hide();
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(ConsumerLandingActivity.this);
+                View mView = getLayoutInflater().inflate(R.layout.forgotpassword_enter_password_dialog,null);
+                mBuilder.setView(mView);
+                passwordDialog = mBuilder.create();
+                passwordDialog.show();
+                enterPassword = mView.findViewById(R.id.enterPasswordDialog);
+                reEnterPassword = mView.findViewById(R.id.reEnterPasswordDialog);
 
-        verifyOtpCall.enqueue(new Callback<HttpResponse>() {
-            @Override
-            public void onResponse(Call<HttpResponse> call, Response<HttpResponse> response) {
-                otpProgressBar.setVisibility(View.GONE);
-                progressBar.setVisibility(View.GONE);
-                try {
-                    HttpResponse httpResponse = response.body();
-                    Toast.makeText(getApplicationContext(),httpResponse.getMessage(),Toast.LENGTH_LONG).show();
-                    if (httpResponse.getStatus() == 200){
-                        AlertDialog.Builder mBuilder = new AlertDialog.Builder(ConsumerLandingActivity.this);
-                        View mView = getLayoutInflater().inflate(R.layout.forgotpassword_enter_password_dialog,null);
-                        mBuilder.setView(mView);
-                        passwordDialog = mBuilder.create();
-                        passwordDialog.show();
-                        enterPassword = mView.findViewById(R.id.enterPasswordDialog);
-                        reEnterPassword = mView.findViewById(R.id.reEnterPasswordDialog);
-
-                        Button submitPassword = mView.findViewById(R.id.submitPassword);
-                        submitPassword.setOnClickListener(submitPasswordListener);
-                    }
-                }catch (Exception e){
-                    Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
-                }
+                Button submitPassword = mView.findViewById(R.id.submitPassword);
+                submitPassword.setOnClickListener(submitPasswordListener);
+            }else {
+                Toast.makeText(this, "Wrong Otp!", Toast.LENGTH_SHORT).show();
             }
-
-            @Override
-            public void onFailure(Call<HttpResponse> call, Throwable t) {
-                otpProgressBar.setVisibility(View.GONE);
-                Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
-            }
-        });
+        }catch (Exception e){
+            Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

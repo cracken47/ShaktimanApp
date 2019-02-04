@@ -23,7 +23,7 @@ import com.alabhya.Shaktiman.apiBackend.ApiClient;
 import com.alabhya.Shaktiman.apiBackend.OtpVerificationService;
 import com.alabhya.Shaktiman.apiBackend.UserManagementService;
 import com.alabhya.Shaktiman.models.ConsumerSignUp.TokenResponseConsumerSignUp;
-import com.alabhya.Shaktiman.models.HttpResponse;
+import com.alabhya.Shaktiman.models.OtpResponse;
 import com.alabhya.Shaktiman.utils.Validator;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -45,6 +45,7 @@ public class ConsumerSignUpActivity extends AppCompatActivity {
     private String  passKey;
     private AlertDialog otpDialog;
     private ProgressBar otpProgressBar;
+    private OtpResponse otpResponse;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,27 +95,31 @@ public class ConsumerSignUpActivity extends AppCompatActivity {
             public void onResponse(Call<TokenResponseConsumerSignUp> call, Response<TokenResponseConsumerSignUp> response) {
                 otpProgressBar.setVisibility(View.GONE);
                 tokenResponseConsumerSignUp = response.body();
-                if(tokenResponseConsumerSignUp.getStatus()==200){
-                    SharedPreferences sharedPreferences = getSharedPreferences("LoginCredentials",Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                try{
+                    if(tokenResponseConsumerSignUp.getStatus()==200){
+                        SharedPreferences sharedPreferences = getSharedPreferences("LoginCredentials",Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                    editor.putString("phone",phone);
-                    editor.putString("password",password);
-                    editor.putBoolean("isProducer",false);
-                    editor.putString("name",tokenResponseConsumerSignUp.getName());
-                    editor.putString("userId",tokenResponseConsumerSignUp.getId().toString());
-                    editor.apply();
+                        editor.putString("phone",phone);
+                        editor.putString("password",password);
+                        editor.putBoolean("isProducer",false);
+                        editor.putString("name",tokenResponseConsumerSignUp.getName());
+                        editor.putString("userId",tokenResponseConsumerSignUp.getId().toString());
+                        editor.apply();
 
-                    Toast.makeText(getApplicationContext(),tokenResponseConsumerSignUp.getMessage(),Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),tokenResponseConsumerSignUp.getMessage(),Toast.LENGTH_LONG).show();
 
-                    startActivity(new Intent(getApplicationContext(),ConsumerHomeActivity.class));
-                    Intent intent = new Intent("finish_consumer_landing_activity");
-                    sendBroadcast(intent);
-                    Intent i = new Intent("finish_main_activity");
-                    sendBroadcast(i);
-                    finish();
-                }else {
-                    Toast.makeText(getApplicationContext(),tokenResponseConsumerSignUp.getMessage(),Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(),ConsumerHomeActivity.class));
+                        Intent intent = new Intent("finish_consumer_landing_activity");
+                        sendBroadcast(intent);
+                        Intent i = new Intent("finish_main_activity");
+                        sendBroadcast(i);
+                        finish();
+                    }else {
+                        Toast.makeText(getApplicationContext(),tokenResponseConsumerSignUp.getMessage(),Toast.LENGTH_SHORT).show();
+                    }
+                }catch (Exception e){
+                    Toast.makeText(ConsumerSignUpActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -132,19 +137,19 @@ public class ConsumerSignUpActivity extends AppCompatActivity {
      * @param phone User Phone Number
      */
     private void getOtp(String phone){
-        Call<HttpResponse> getOtpCall = otpVerificationService.getOtp(phone);
+        Call<OtpResponse> getOtpCall = otpVerificationService.getOtp(phone);
 
-        getOtpCall.enqueue(new Callback<HttpResponse>() {
+        getOtpCall.enqueue(new Callback<OtpResponse>() {
             @Override
-            public void onResponse(Call<HttpResponse> call, Response<HttpResponse> response) {
+            public void onResponse(Call<OtpResponse> call, Response<OtpResponse> response) {
                 otpProgressBar.setVisibility(View.GONE);
                 try {
-                    HttpResponse httpResponse = response.body();
-                    if(httpResponse.getStatus() == 200){
-                        Toast.makeText(getApplicationContext(),httpResponse.getMessage(),Toast.LENGTH_LONG).show();
+                    otpResponse = response.body();
+                    if(otpResponse.getStatus() == 200){
+                        Toast.makeText(getApplicationContext(),otpResponse.getMessage(),Toast.LENGTH_LONG).show();
                     }else{
                         otpDialog.hide();
-                        Toast.makeText(getApplicationContext(),httpResponse.getMessage(),Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),otpResponse.getMessage(),Toast.LENGTH_LONG).show();
                     }
                 }catch (NullPointerException e){
                     Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
@@ -152,7 +157,7 @@ public class ConsumerSignUpActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<HttpResponse> call, Throwable t) {
+            public void onFailure(Call<OtpResponse> call, Throwable t) {
                 otpProgressBar.setVisibility(View.GONE);
                 Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
             }
@@ -160,35 +165,20 @@ public class ConsumerSignUpActivity extends AppCompatActivity {
     }
 
     /**
-     * Function to get
-     * @param phone
+     * Function to verify OTP
+     *
      * @param otp
      */
-    private void verifyOtp(final String phone, String otp){
-        Call<HttpResponse> verifyOtpCall = otpVerificationService.verifyOtp(phone,otp);
-
-        verifyOtpCall.enqueue(new Callback<HttpResponse>() {
-            @Override
-            public void onResponse(Call<HttpResponse> call, Response<HttpResponse> response) {
-                otpProgressBar.setVisibility(View.GONE);
-                try {
-                    HttpResponse httpResponse = response.body();
-                    Toast.makeText(getApplicationContext(),httpResponse.getMessage(),Toast.LENGTH_LONG).show();
-                    if (httpResponse.getStatus() == 200){
-                        otpDialog.hide();
-                        consumerSignUp(name,phone,passKey);
-                    }
-                }catch (Exception e){
-                    Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
-                }
+    private void verifyOtp(int otp){
+        try {
+            if(Integer.parseInt(otpView.getText().toString())==otp){
+                consumerSignUp(name,phone,passKey);
+            }else {
+                Toast.makeText(this, "Wrong Otp!", Toast.LENGTH_SHORT).show();
             }
-
-            @Override
-            public void onFailure(Call<HttpResponse> call, Throwable t) {
-                otpProgressBar.setVisibility(View.GONE);
-                Toast.makeText(getApplicationContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show();
-            }
-        });
+        }catch (Exception e){
+            Toast.makeText(this, "Something went wrong!", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -238,8 +228,8 @@ public class ConsumerSignUpActivity extends AppCompatActivity {
         public void onClick(View view) {
             otpProgressBar.setVisibility(View.VISIBLE);
             try {
-                String otp = otpView.getText().toString();
-                verifyOtp(phone,otp);
+                int otp = otpResponse.getOtp();
+                verifyOtp(otp);
             }catch (NullPointerException e){
                 otpView.setError("must not be empty!");
             }

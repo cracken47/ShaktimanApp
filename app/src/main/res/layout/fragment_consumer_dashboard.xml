@@ -96,7 +96,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardView2"
+                android:id="@+id/changeConsumerPassword"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_64sdp"
                 android:layout_marginLeft="@dimen/_16sdp"
@@ -170,7 +170,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardView2">
+                app:layout_constraintTop_toBottomOf="@+id/changeConsumerPassword">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/logout_dashboard"
